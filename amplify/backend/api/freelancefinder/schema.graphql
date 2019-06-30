@@ -1,0 +1,12 @@
+type Job @model {
+  description: String!
+  numberOfDays: Int
+  hourlyRate: Int
+  hoursPerWeek: String
+  id: ID!
+  location: String!
+  pricingStructure: String
+  remote: Boolean
+  title: String!
+  type: String!
+}

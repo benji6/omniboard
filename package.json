@@ -4,7 +4,10 @@
   "private": true,
   "dependencies": {
     "aws-amplify": "^1.1.29",
+    "aws-appsync": "^1.8.1",
+    "graphql-tag": "^2.10.1",
     "react": "^16.8.6",
+    "react-apollo": "^2.5.8",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1"
   },
