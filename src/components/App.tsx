@@ -3,6 +3,7 @@ import awsconfig from '../aws-exports'
 import JobList from './JobList'
 import { ApolloProvider } from 'react-apollo'
 import AWSAppSyncClient from 'aws-appsync'
+import CreateJob from './CreateJob'
 
 const client = new AWSAppSyncClient({
   auth: {
@@ -21,6 +22,7 @@ export default function App() {
       </header>
       <main>
         <JobList />
+        <CreateJob />
       </main>
     </ApolloProvider>
   )
