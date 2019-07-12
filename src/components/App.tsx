@@ -18,7 +18,7 @@ export default function App() {
   return (
     <ApolloProvider client={client}>
       <header>
-        <h1>Freelance finder</h1>
+        <h1>Freelance revolution</h1>
       </header>
       <main>
         <JobList />
