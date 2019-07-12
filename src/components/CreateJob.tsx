@@ -1,5 +1,6 @@
+import { Button, TextField } from 'eri'
 import React from 'react'
-import { Formik, FormikProps, Form, Field, ErrorMessage } from 'formik'
+import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { createJob } from '../graphql/mutations'
@@ -41,18 +42,62 @@ export default function CreateJob() {
             }}
           >
             {({ isSubmitting }: FormikProps<IFormValues>) => (
-              <Form>
-                <Field type="text" name="title" />
-                <ErrorMessage name="title" component="div" />
-                <Field type="text" name="type" />
-                <ErrorMessage name="type" component="div" />
-                <Field type="text" name="location" />
-                <ErrorMessage name="location" component="div" />
-                <Field type="text" name="description" />
-                <ErrorMessage name="description" component="div" />
-                <button type="submit" disabled={isSubmitting}>
+              <Form noValidate>
+                <Field name="title">
+                  {({ field, form }: FieldProps<IFormValues>) => (
+                    <TextField
+                      {...field}
+                      error={
+                        form.submitCount &&
+                        form.touched.title &&
+                        form.errors.title
+                      }
+                      label="Title"
+                    />
+                  )}
+                </Field>
+                <Field name="type">
+                  {({ field, form }: FieldProps<IFormValues>) => (
+                    <TextField
+                      {...field}
+                      error={
+                        form.submitCount &&
+                        form.touched.type &&
+                        form.errors.type
+                      }
+                      label="Type"
+                    />
+                  )}
+                </Field>
+                <Field name="location">
+                  {({ field, form }: FieldProps<IFormValues>) => (
+                    <TextField
+                      {...field}
+                      error={
+                        form.submitCount &&
+                        form.touched.location &&
+                        form.errors.location
+                      }
+                      label="Location"
+                    />
+                  )}
+                </Field>
+                <Field name="description">
+                  {({ field, form }: FieldProps<IFormValues>) => (
+                    <TextField
+                      {...field}
+                      error={
+                        form.submitCount &&
+                        form.touched.description &&
+                        form.errors.description
+                      }
+                      label="Description"
+                    />
+                  )}
+                </Field>
+                <Button type="submit" disabled={isSubmitting}>
                   Submit
-                </button>
+                </Button>
               </Form>
             )}
           </Formik>

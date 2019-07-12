@@ -1,3 +1,4 @@
+import { Paper, PaperGroup } from 'eri'
 import React from 'react'
 import awsconfig from '../aws-exports'
 import JobList from './JobList'
@@ -18,11 +19,21 @@ export default function App() {
   return (
     <ApolloProvider client={client}>
       <header>
-        <h1>Freelance revolution</h1>
+        <div>
+          <h1>
+            <a href="/">Freelance revolution</a>
+          </h1>
+        </div>
       </header>
       <main>
-        <JobList />
-        <CreateJob />
+        <PaperGroup>
+          <Paper>
+            <JobList />
+          </Paper>
+          <Paper>
+            <CreateJob />
+          </Paper>
+        </PaperGroup>
       </main>
     </ApolloProvider>
   )
