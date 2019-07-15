@@ -2,22 +2,21 @@
 # yarn lockfile v1
 
 
-"@aws-amplify/analytics@^1.2.17":
-  version "1.2.17"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/analytics/-/analytics-1.2.17.tgz#def1036f16665032eea9096cc56dac9663be3798"
-  integrity sha512-yAlDNi0gNc1qUreEAC87NrumixXwHIWXnh7snCrwr6DGLKlKfdRrqq5Arm5MdlrNMVvXGtgJpO4LgSbZPrQDqg==
+"@aws-amplify/analytics@^1.2.18":
+  version "1.2.18"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/analytics/-/analytics-1.2.18.tgz#0f62b5c76e72fff5214589ccf7741401e38bee37"
+  integrity sha512-GfVpkuGOex8H2il0QjSent6OUvOaI7wKFc154TKiawc/g/EBb9qdEaVnW/ZMn0a/iYjE5qXhqzr0aE3BnWlhLw==
   dependencies:
     "@aws-amplify/cache" "^1.0.28"
     "@aws-amplify/core" "^1.0.28"
     uuid "^3.2.1"
-    youtube-iframe "^1.0.3"
 
-"@aws-amplify/api@^1.0.36":
-  version "1.0.36"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/api/-/api-1.0.36.tgz#4f783b95a5e6d0171cfd99dd227677f7bdd38c82"
-  integrity sha512-4lIjO/JoP23/YN6WL0kOfidEVsOd4wNI7QcU5JZDMb4SKr+rWNpEnygWPE1cUElEHxRPO4LXNt3c9okHhCsH2Q==
+"@aws-amplify/api@^1.0.37":
+  version "1.0.37"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/api/-/api-1.0.37.tgz#c95f927c17debdabb52e4bd364bce24ad5b06b76"
+  integrity sha512-/qXtpajnmVRXr1q3LrLUobHzlfXoqkUVXE3YOCNHThzAJ+bq1HwM1IkAAGLOIOl6c9Es73U0AASYl7TRFqBp0A==
   dependencies:
-    "@aws-amplify/auth" "^1.2.25"
+    "@aws-amplify/auth" "^1.2.26"
     "@aws-amplify/cache" "^1.0.28"
     "@aws-amplify/core" "^1.0.28"
     axios "^0.19.0"
@@ -25,10 +24,10 @@
     uuid "^3.2.1"
     zen-observable "^0.8.6"
 
-"@aws-amplify/auth@^1.2.25":
-  version "1.2.25"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/auth/-/auth-1.2.25.tgz#19fb41f4ce5371816be047f944ce32de3a732385"
-  integrity sha512-EInwrm07BNCxnKKRqCAjGU7yrqwoNeSCbymaDp9vxLyNDZwtAl6OOmid7gHTKEl3GHwwhTeloeCAUj1hAMfrIw==
+"@aws-amplify/auth@^1.2.26":
+  version "1.2.26"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/auth/-/auth-1.2.26.tgz#3aa0f110d4ee25444fed8d55be586fef213caba3"
+  integrity sha512-8+e6iDPTdGl+mxEzLycMlXUp2iAqtieDctTZtklAISTRgo5jR53m7O63CZabA1qE5OB3w9VxfTNFsqvMbiZHBQ==
   dependencies:
     "@aws-amplify/cache" "^1.0.28"
     "@aws-amplify/core" "^1.0.28"
@@ -1378,10 +1377,18 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^16.8.22":
+"@types/react@*":
   version "16.8.22"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.22.tgz#7f18bf5ea0c1cad73c46b6b1c804a3ce0eec6d54"
   integrity sha512-C3O1yVqk4sUXqWyx0wlys76eQfhrQhiDhDlHBrjER76lR2S2Agiid/KpOU9oCqj1dISStscz7xXz1Cg8+sCQeA==
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
+
+"@types/react@^16.8.23":
+  version "16.8.23"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.23.tgz#ec6be3ceed6353a20948169b6cb4c97b65b97ad2"
+  integrity sha512-abkEOIeljniUN9qB5onp++g0EY38h7atnDHxwKUFz1r3VH1+yG1OKi2sNPTyObL40goBmfKFpdii2lEzwLX1cA==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -2051,14 +2058,14 @@ autoprefixer@^9.4.9:
     postcss "^7.0.14"
     postcss-value-parser "^3.3.1"
 
-aws-amplify@^1.1.29:
-  version "1.1.29"
-  resolved "https://registry.yarnpkg.com/aws-amplify/-/aws-amplify-1.1.29.tgz#33306c147e83651147eec8c0ed018521fee0af28"
-  integrity sha512-UP0dp/H8SPLmtCi0/9FjLFwcKGvcd+Mzzm0k8ufTkTgBQsfe+zkb+LBXoaP+mjntMTQlBDie0QYfZ6Klf8eHwA==
+aws-amplify@^1.1.30:
+  version "1.1.30"
+  resolved "https://registry.yarnpkg.com/aws-amplify/-/aws-amplify-1.1.30.tgz#abcb82c9b1e4db10b4d1965b3acd7ec52260241b"
+  integrity sha512-gi805ZK7jQshD0sQVhpVpUyi4YbVFdGkV4mXRTG3nFhvUHa4TAOsFu8EUrOlseO/9Qwcxee3l4j1J1vFKgEEJg==
   dependencies:
-    "@aws-amplify/analytics" "^1.2.17"
-    "@aws-amplify/api" "^1.0.36"
-    "@aws-amplify/auth" "^1.2.25"
+    "@aws-amplify/analytics" "^1.2.18"
+    "@aws-amplify/api" "^1.0.37"
+    "@aws-amplify/auth" "^1.2.26"
     "@aws-amplify/cache" "^1.0.28"
     "@aws-amplify/core" "^1.0.28"
     "@aws-amplify/interactions" "^1.0.31"
@@ -3776,10 +3783,10 @@ entities@^1.1.1:
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.2.tgz#bdfa735299664dfafd34529ed4f8522a275fea56"
   integrity sha512-f2LZMYl1Fzu7YSBKg+RoROelpOaNrcGmE9AZubeDfrCEia483oW4MI4VyFd5VNHIgQ/7qm1I0wUHK1eJnn2y2w==
 
-eri@^10.8.1:
-  version "10.8.1"
-  resolved "https://registry.yarnpkg.com/eri/-/eri-10.8.1.tgz#236ae04bb7933af4015d8577caa72ad1b35d2155"
-  integrity sha512-oywf7itDe6Lw1rhSM0MUQkxB1QlxFruu7LkjFihIm8ENu6MCfZVNN73WiqjSXZFXSlXQ9dkzVfBLrKiyOokVhA==
+eri@^10.8.2:
+  version "10.8.2"
+  resolved "https://registry.yarnpkg.com/eri/-/eri-10.8.2.tgz#4c915a67dcb969ff5229c64d3458275758f33834"
+  integrity sha512-53wyzjYz8Nv2vrmp5B8XRySXq63CTX2Z31KUDFu3LVSLoCCeo4Lqq+1/YT0R09BTAjON2f1uinu5YRIJvnlDQQ==
   dependencies:
     react-transition-group "^4.1.1"
 
@@ -4461,16 +4468,16 @@ form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
-formik@^1.5.7:
-  version "1.5.7"
-  resolved "https://registry.yarnpkg.com/formik/-/formik-1.5.7.tgz#2fc5fc2f0c693cdc4e8c9dad3a10eb4c4e131ff5"
-  integrity sha512-kZo8lS4WzfC2uivnSkE9DOuX9x+jVjCtIZOlb1A4lHGeURyuLt6eDfwGJzNlcP0lXIwmpANKzegiB8j60B54TA==
+formik@^1.5.8:
+  version "1.5.8"
+  resolved "https://registry.yarnpkg.com/formik/-/formik-1.5.8.tgz#eee8cd345effe46839bc748c7f920486f12f14b0"
+  integrity sha512-fNvPe+ddbh+7xiByT25vuso2p2hseG/Yvuj211fV1DbCjljUEG9OpgRpcb7g7O3kxHX/q31cbZDzMxJXPWSNwA==
   dependencies:
     create-react-context "^0.2.2"
     deepmerge "^2.1.1"
     hoist-non-react-statics "^3.3.0"
-    lodash "^4.17.11"
-    lodash-es "^4.17.11"
+    lodash "^4.17.14"
+    lodash-es "^4.17.14"
     prop-types "^15.6.1"
     react-fast-compare "^2.0.1"
     tiny-warning "^1.0.2"
@@ -6297,7 +6304,12 @@ locate-path@^3.0.0:
     p-locate "^3.0.0"
     path-exists "^3.0.0"
 
-lodash-es@^4.17.11, lodash-es@^4.17.4, lodash-es@^4.2.1:
+lodash-es@^4.17.14:
+  version "4.17.14"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.14.tgz#12a95a963cc5955683cee3b74e85458954f37ecc"
+  integrity sha512-7zchRrGa8UZXjD/4ivUWP1867jDkhzTG2c/uj739utSd7O/pFFdxspCemIFKEEjErbcqRzn8nKnGsi7mvTgRPA==
+
+lodash-es@^4.17.4, lodash-es@^4.2.1:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.11.tgz#145ab4a7ac5c5e52a3531fb4f310255a152b4be0"
   integrity sha512-DHb1ub+rMjjrxqlB3H56/6MXtm1lSksDp2rA2cNWjG8mlDUYFhUj3Di2Zn5IwSU87xLv8tNIQ7sSwE/YOX/D/Q==
@@ -6356,6 +6368,11 @@ lodash.uniq@^4.5.0:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
+
+lodash@^4.17.14:
+  version "4.17.14"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
+  integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
 
 loglevel@^1.4.1:
   version "1.6.1"
@@ -9811,10 +9828,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^3.5.2:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.2.tgz#a09e1dc69bc9551cadf17dba10ee42cf55e5d56c"
-  integrity sha512-7KxJovlYhTX5RaRbUdkAXN1KUZ8PwWlTzQdHV6xNqvuFOs7+WBo10TQUqT19Q/Jz2hk5v9TQDIhyLhhJY4p5AA==
+typescript@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.3.tgz#c830f657f93f1ea846819e929092f5fe5983e977"
+  integrity sha512-ACzBtm/PhXBDId6a6sDJfroT2pOWt/oOnk4/dElG5G33ZL776N3Y6/6bKZJBFpd+b05F3Ct9qDjMeJmRWtE2/g==
 
 ua-parser-js@^0.7.18:
   version "0.7.20"
@@ -10632,11 +10649,6 @@ yargs@^12.0.2:
     which-module "^2.0.0"
     y18n "^3.2.1 || ^4.0.0"
     yargs-parser "^11.1.1"
-
-youtube-iframe@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/youtube-iframe/-/youtube-iframe-1.0.3.tgz#0fcdf4847e60f8dca7ee91d9ecd913655067b35b"
-  integrity sha1-D830hH5g+Nyn7pHZ7NkTZVBns1s=
 
 zen-observable-ts@^0.8.10, zen-observable-ts@^0.8.19:
   version "0.8.19"

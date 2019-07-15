@@ -1,10 +1,10 @@
 {
   "private": true,
   "dependencies": {
-    "aws-amplify": "^1.1.29",
+    "aws-amplify": "^1.1.30",
     "aws-appsync": "^1.8.1",
-    "eri": "^10.8.1",
-    "formik": "^1.5.7",
+    "eri": "^10.8.2",
+    "formik": "^1.5.8",
     "graphql-tag": "^2.10.1",
     "react": "^16.8.6",
     "react-apollo": "^2.5.8",
@@ -33,9 +33,9 @@
     ]
   },
   "devDependencies": {
-    "@types/react": "^16.8.22",
+    "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
     "prettier": "^1.18.2",
-    "typescript": "^3.5.2"
+    "typescript": "^3.5.3"
   }
 }

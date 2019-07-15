@@ -21,7 +21,7 @@ export default function App() {
       <header>
         <div>
           <h1>
-            <a href="/">Freelance revolution</a>
+            <a href="/">Freelance Revolution</a>
           </h1>
         </div>
       </header>
