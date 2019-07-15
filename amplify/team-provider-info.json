@@ -1,18 +1,18 @@
 {
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "freelance-finder-dev-20190629213817-authRole",
-            "UnauthRoleArn": "arn:aws:iam::315965384508:role/freelance-finder-dev-20190629213817-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::315965384508:role/freelance-finder-dev-20190629213817-authRole",
+            "AuthRoleName": "freelance-revolution-dev-20190716152318-authRole",
+            "UnauthRoleArn": "arn:aws:iam::315965384508:role/freelance-revolution-dev-20190716152318-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::315965384508:role/freelance-revolution-dev-20190716152318-authRole",
             "Region": "us-east-1",
-            "DeploymentBucketName": "freelance-finder-dev-20190629213817-deployment",
-            "UnauthRoleName": "freelance-finder-dev-20190629213817-unauthRole",
-            "StackName": "freelance-finder-dev-20190629213817",
-            "StackId": "arn:aws:cloudformation:us-east-1:315965384508:stack/freelance-finder-dev-20190629213817/d3c4a390-9aad-11e9-8a4d-1298ca2ea00e"
+            "DeploymentBucketName": "freelance-revolution-dev-20190716152318-deployment",
+            "UnauthRoleName": "freelance-revolution-dev-20190716152318-unauthRole",
+            "StackName": "freelance-revolution-dev-20190716152318",
+            "StackId": "arn:aws:cloudformation:us-east-1:315965384508:stack/freelance-revolution-dev-20190716152318/41fcf400-a7d5-11e9-88f1-0e0621d8669c"
         },
         "categories": {
             "auth": {
-                "cognito813d4f35": {}
+                "freelancerevolutionbf7d815f": {}
             }
         }
     }

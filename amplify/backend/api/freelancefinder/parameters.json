@@ -1,4 +1,0 @@
-{
-    "AppSyncApiName": "freelancefinder",
-    "DynamoDBBillingMode": "PAY_PER_REQUEST"
-}

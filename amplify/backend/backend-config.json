@@ -1,8 +1,9 @@
 {
 	"auth": {
-		"cognito813d4f35": {
+		"freelancerevolutionbf7d815f": {
 			"service": "Cognito",
-			"providerPlugin": "awscloudformation"
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
 		}
 	},
 	"hosting": {
@@ -12,11 +13,11 @@
 		}
 	},
 	"api": {
-		"freelancefinder": {
+		"freelance": {
 			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
 			"output": {
-				"securityType": "API_KEY"
+				"securityType": "AMAZON_COGNITO_USER_POOLS"
 			}
 		}
 	}
