@@ -1,4 +1,4 @@
-import { Button, TextField } from 'eri'
+import { Button, TextField, ButtonGroup } from 'eri'
 import React from 'react'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import { Mutation } from 'react-apollo'
@@ -95,9 +95,11 @@ export default function CreateJob() {
                     />
                   )}
                 </Field>
-                <Button type="submit" disabled={isSubmitting}>
-                  Submit
-                </Button>
+                <ButtonGroup>
+                  <Button type="submit" disabled={isSubmitting}>
+                    Submit
+                  </Button>
+                </ButtonGroup>
               </Form>
             )}
           </Formik>
