@@ -5,6 +5,7 @@ import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { createJob } from '../graphql/mutations'
 import { CreateJobMutationVariables, CreateJobMutation } from '../API'
+import { requiredValidator } from '../validators'
 
 interface IFormValues {
   description: string
@@ -30,12 +31,6 @@ export default function CreateJob() {
         {create => (
           <Formik
             initialValues={initialValues}
-            validate={values => {
-              let errors: any = {}
-              for (const [fieldName, value] of Object.entries(values))
-                if (!value) errors[fieldName] = 'Required'
-              return errors
-            }}
             onSubmit={async (values, { setSubmitting }) => {
               await create({ variables: { input: values } })
               setSubmitting(false)
@@ -43,7 +38,7 @@ export default function CreateJob() {
           >
             {({ isSubmitting }: FormikProps<IFormValues>) => (
               <Form noValidate>
-                <Field name="title">
+                <Field name="title" validate={requiredValidator}>
                   {({ field, form }: FieldProps<IFormValues>) => (
                     <TextField
                       {...field}
@@ -56,7 +51,7 @@ export default function CreateJob() {
                     />
                   )}
                 </Field>
-                <Field name="type">
+                <Field name="type" validate={requiredValidator}>
                   {({ field, form }: FieldProps<IFormValues>) => (
                     <TextField
                       {...field}
@@ -69,7 +64,7 @@ export default function CreateJob() {
                     />
                   )}
                 </Field>
-                <Field name="location">
+                <Field name="location" validate={requiredValidator}>
                   {({ field, form }: FieldProps<IFormValues>) => (
                     <TextField
                       {...field}
@@ -82,7 +77,7 @@ export default function CreateJob() {
                     />
                   )}
                 </Field>
-                <Field name="description">
+                <Field name="description" validate={requiredValidator}>
                   {({ field, form }: FieldProps<IFormValues>) => (
                     <TextField
                       {...field}
