@@ -6,6 +6,7 @@ import gql from 'graphql-tag'
 import { createJob } from '../graphql/mutations'
 import { CreateJobMutationVariables, CreateJobMutation } from '../API'
 import { requiredValidator } from '../validators'
+import { networkErrorMessage } from '../constants'
 
 interface IFormValues {
   description: string
@@ -22,6 +23,8 @@ const initialValues = {
 }
 
 export default function CreateJob() {
+  const [submitError, setSubmitError] = React.useState<string | undefined>()
+
   return (
     <>
       <h2>Create job</h2>
@@ -32,8 +35,13 @@ export default function CreateJob() {
           <Formik
             initialValues={initialValues}
             onSubmit={async (values, { setSubmitting }) => {
-              await create({ variables: { input: values } })
-              setSubmitting(false)
+              try {
+                await create({ variables: { input: values } })
+              } catch {
+                setSubmitError(networkErrorMessage)
+              } finally {
+                setSubmitting(false)
+              }
             }}
           >
             {({ isSubmitting }: FormikProps<IFormValues>) => (
@@ -90,10 +98,13 @@ export default function CreateJob() {
                     />
                   )}
                 </Field>
+                {submitError && (
+                  <p e-util="center">
+                    <small e-util="negative">{submitError}</small>
+                  </p>
+                )}
                 <ButtonGroup>
-                  <Button type="submit" disabled={isSubmitting}>
-                    Submit
-                  </Button>
+                  <Button disabled={isSubmitting}>Submit</Button>
                 </ButtonGroup>
               </Form>
             )}
