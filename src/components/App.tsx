@@ -1,4 +1,4 @@
-import Amplify, { Auth } from 'aws-amplify'
+import Auth from '@aws-amplify/auth'
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync'
 import { Paper, PaperGroup } from 'eri'
 import React from 'react'
@@ -7,8 +7,7 @@ import awsconfig from '../aws-exports'
 import JobList from './JobList'
 import CreateJob from './CreateJob'
 
-// TODO
-Amplify.configure(awsconfig)
+Auth.configure(awsconfig)
 
 const client = new AWSAppSyncClient({
   auth: {
