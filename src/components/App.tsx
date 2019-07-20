@@ -6,6 +6,8 @@ import { ApolloProvider } from 'react-apollo'
 import awsconfig from '../aws-exports'
 import JobList from './JobList'
 import CreateJob from './CreateJob'
+import SignIn from './SignIn'
+import SignUp from './SignUp'
 
 Auth.configure(awsconfig)
 
@@ -36,6 +38,12 @@ export default function App() {
           </Paper>
           <Paper>
             <CreateJob />
+          </Paper>
+          <Paper>
+            <SignIn />
+          </Paper>
+          <Paper>
+            <SignUp />
           </Paper>
         </PaperGroup>
       </main>
