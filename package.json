@@ -1,6 +1,7 @@
 {
   "private": true,
   "dependencies": {
+    "@reach/router": "^1.2.1",
     "aws-amplify": "^1.1.30",
     "aws-appsync": "^1.8.1",
     "eri": "^10.8.2",
@@ -33,6 +34,7 @@
     ]
   },
   "devDependencies": {
+    "@types/reach__router": "^1.2.4",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
     "prettier": "^1.18.2",

@@ -1,13 +1,12 @@
 import Auth from '@aws-amplify/auth'
+import { Link } from '@reach/router'
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync'
-import { Paper, PaperGroup } from 'eri'
+import { Header, MenuButton } from 'eri'
 import React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import awsconfig from '../aws-exports'
-import JobList from './JobList'
-import CreateJob from './CreateJob'
-import SignIn from './SignIn'
-import SignUp from './SignUp'
+import Router from './Router'
+import Menu from './Menu'
 
 Auth.configure(awsconfig)
 
@@ -22,30 +21,22 @@ const client = new AWSAppSyncClient({
 })
 
 export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+
+  const handleMenuClose = () => setIsMenuOpen(false)
+  const handleMenuOpen = () => setIsMenuOpen(true)
+
   return (
     <ApolloProvider client={client}>
-      <header>
-        <div>
-          <h1>
-            <a href="/">Freelance Revolution</a>
-          </h1>
-        </div>
-      </header>
+      <Header>
+        <h1>
+          <Link to="/">Freelance Revolution</Link>
+        </h1>
+        <MenuButton onClick={handleMenuOpen} />
+      </Header>
+      <Menu handleMenuClose={handleMenuClose} open={isMenuOpen} />
       <main>
-        <PaperGroup>
-          <Paper>
-            <JobList />
-          </Paper>
-          <Paper>
-            <CreateJob />
-          </Paper>
-          <Paper>
-            <SignIn />
-          </Paper>
-          <Paper>
-            <SignUp />
-          </Paper>
-        </PaperGroup>
+        <Router />
       </main>
     </ApolloProvider>
   )
