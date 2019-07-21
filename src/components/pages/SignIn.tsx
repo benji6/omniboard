@@ -1,5 +1,5 @@
 import Auth from '@aws-amplify/auth'
-import { RouteComponentProps, Link } from '@reach/router'
+import { RouteComponentProps, Link, NavigateFn } from '@reach/router'
 import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import React from 'react'
@@ -21,7 +21,7 @@ const initialValues = {
   password: '',
 }
 
-export default function SignIn(_: RouteComponentProps) {
+export default function SignIn({ navigate }: RouteComponentProps) {
   const [submitError, setSubmitError] = React.useState<string | undefined>()
 
   return (
@@ -32,8 +32,8 @@ export default function SignIn(_: RouteComponentProps) {
           initialValues={initialValues}
           onSubmit={async ({ email, password }, { setSubmitting }) => {
             try {
-              const user = await Auth.signIn(email, password)
-              console.log({ user })
+              await Auth.signIn(email, password)
+              ;(navigate as NavigateFn)('/')
             } catch (e) {
               switch (e.code) {
                 case 'NetworkError':
