@@ -7,6 +7,7 @@ import { ApolloProvider } from 'react-apollo'
 import awsconfig from '../aws-exports'
 import Router from './Router'
 import Menu from './Menu'
+import AppStateContainer from './AppStateContainer'
 
 Auth.configure(awsconfig)
 
@@ -35,16 +36,18 @@ export default function App() {
 
   return (
     <ApolloProvider client={client}>
-      <Header>
-        <h1>
-          <Link to="/">Freelance Revolution</Link>
-        </h1>
-        <MenuButton onClick={handleMenuOpen} />
-      </Header>
-      <Menu handleMenuClose={handleMenuClose} open={isMenuOpen} />
-      <main>
-        <Router />
-      </main>
+      <AppStateContainer>
+        <Header>
+          <h1>
+            <Link to="/">Freelance Revolution</Link>
+          </h1>
+          <MenuButton onClick={handleMenuOpen} />
+        </Header>
+        <Menu handleMenuClose={handleMenuClose} open={isMenuOpen} />
+        <main>
+          <Router />
+        </main>
+      </AppStateContainer>
     </ApolloProvider>
   )
 }

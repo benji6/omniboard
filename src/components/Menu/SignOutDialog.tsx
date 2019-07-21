@@ -3,6 +3,7 @@ import { navigate } from '@reach/router'
 import { Dialog, ButtonGroup, Button } from 'eri'
 import * as React from 'react'
 import { withApollo, WithApolloClient } from 'react-apollo'
+import { useAppState } from '../AppStateContainer'
 
 interface IProps {
   onClose(): void
@@ -15,6 +16,7 @@ export default withApollo(function SignOutDialog({
   open,
 }: WithApolloClient<IProps>) {
   const [isLoading, setIsLoading] = React.useState(false)
+  const dispatch = useAppState()[1]
 
   const handleSignOut = async () => {
     setIsLoading(true)
@@ -24,6 +26,7 @@ export default withApollo(function SignOutDialog({
       client.resetStore()
       onClose()
       setIsLoading(false)
+      dispatch({ type: 'setUserEmail' })
       navigate('/')
     }
   }

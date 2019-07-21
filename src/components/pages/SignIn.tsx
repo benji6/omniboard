@@ -10,6 +10,7 @@ import {
   requiredValidator,
 } from '../../validators'
 import { networkErrorMessage } from '../../constants'
+import { useAppState } from '../AppStateContainer'
 
 interface IFormValues {
   email: string
@@ -23,6 +24,7 @@ const initialValues = {
 
 export default function SignIn({ navigate }: RouteComponentProps) {
   const [submitError, setSubmitError] = React.useState<string | undefined>()
+  const dispatch = useAppState()[1]
 
   return (
     <PaperGroup>
@@ -32,7 +34,8 @@ export default function SignIn({ navigate }: RouteComponentProps) {
           initialValues={initialValues}
           onSubmit={async ({ email, password }, { setSubmitting }) => {
             try {
-              await Auth.signIn(email, password)
+              const user = await Auth.signIn(email, password)
+              dispatch({ payload: user.attributes.email, type: 'setUserEmail' })
               ;(navigate as NavigateFn)('/')
             } catch (e) {
               switch (e.code) {

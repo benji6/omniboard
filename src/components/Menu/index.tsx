@@ -2,6 +2,7 @@ import { Link } from '@reach/router'
 import { Menu as EriMenu, ThemeToggle, ButtonGroup, Button } from 'eri'
 import * as React from 'react'
 import SignOutDialog from './SignOutDialog'
+import { useAppState } from '../AppStateContainer'
 
 interface IProps {
   open: boolean
@@ -10,6 +11,11 @@ interface IProps {
 
 export default function Menu({ handleMenuClose, open }: IProps) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false)
+  const [
+    {
+      user: { email: userEmail },
+    },
+  ] = useAppState()
 
   const handleDialogClose = () => {
     setIsDialogOpen(false)
@@ -19,16 +25,25 @@ export default function Menu({ handleMenuClose, open }: IProps) {
   return (
     <>
       <EriMenu onClose={handleMenuClose} open={open}>
-        <ButtonGroup>
-          <Button
-            danger
-            onClick={() => setIsDialogOpen(true)}
-            variant="secondary"
-          >
-            Sign out
-          </Button>
-        </ButtonGroup>
-        <hr />
+        {userEmail && (
+          <>
+            <p>
+              Signed in as:
+              <br />
+              {userEmail}
+            </p>
+            <ButtonGroup>
+              <Button
+                danger
+                onClick={() => setIsDialogOpen(true)}
+                variant="secondary"
+              >
+                Sign out
+              </Button>
+            </ButtonGroup>
+            <hr />
+          </>
+        )}
         <ThemeToggle />
         <ul>
           <li>
@@ -36,21 +51,26 @@ export default function Menu({ handleMenuClose, open }: IProps) {
               Home
             </Link>
           </li>
-          <li>
-            <Link onClick={handleMenuClose} to="jobs/create">
-              Create job ad
-            </Link>
-          </li>
-          <li>
-            <Link onClick={handleMenuClose} to="sign-in">
-              Sign in
-            </Link>
-          </li>
-          <li>
-            <Link onClick={handleMenuClose} to="sign-up">
-              Sign up
-            </Link>
-          </li>
+          {userEmail ? (
+            <li>
+              <Link onClick={handleMenuClose} to="jobs/create">
+                Create job ad
+              </Link>
+            </li>
+          ) : (
+            <>
+              <li>
+                <Link onClick={handleMenuClose} to="sign-in">
+                  Sign in
+                </Link>
+              </li>
+              <li>
+                <Link onClick={handleMenuClose} to="sign-up">
+                  Sign up
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </EriMenu>
       <SignOutDialog onClose={handleDialogClose} open={isDialogOpen} />
