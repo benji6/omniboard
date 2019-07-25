@@ -30,7 +30,7 @@ export default function JobListItem({ job, ...rest }: IProps) {
           })
           .map(([key, val]) => (
             <li key={key}>
-              {key}: {val}
+              {key}: {String(val)}
             </li>
           ))}
       </ul>
