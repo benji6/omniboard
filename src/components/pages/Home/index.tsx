@@ -1,13 +1,13 @@
-import { RouteComponentProps } from '@reach/router'
+import { RouteComponentProps, NavigateFn } from '@reach/router'
 import { Spinner, PaperGroup, Paper } from 'eri'
 import gql from 'graphql-tag'
 import React from 'react'
 import { Query } from 'react-apollo'
 import { listJobs } from '../../../graphql/queries'
 import { ListJobsQueryVariables, ListJobsQuery } from '../../../API'
-import Job from './Job'
+import JobListItem from './JobListItem'
 
-export default function Home(_: RouteComponentProps) {
+export default function Home({ navigate }: RouteComponentProps) {
   return (
     <PaperGroup>
       <Paper>
@@ -19,7 +19,11 @@ export default function Home(_: RouteComponentProps) {
           if (error || !data || !data.listJobs || !data.listJobs.items)
             return <p>Something went wrong, please try again</p>
           return data.listJobs.items.map((job: any) => (
-            <Job {...job} key={job.id} />
+            <JobListItem
+              job={job}
+              key={job.id}
+              onClick={() => (navigate as NavigateFn)(`/jobs/${job.id}`)}
+            />
           ))
         }}
       </Query>

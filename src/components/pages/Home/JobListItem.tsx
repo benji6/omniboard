@@ -1,26 +1,27 @@
 import * as React from 'react'
 import { Paper } from 'eri'
+import { keysToIgnore } from '../Job'
 
 interface IProps {
-  description: string
-  numberOfDays: number | null
-  hourlyRate: number | null
-  hoursPerWeek: string | null
-  id: string
-  location: string
-  pricingStructure: string | null
-  remote: boolean | null
-  title: string
-  type: string
+  job: {
+    description: string
+    numberOfDays: number | null
+    hourlyRate: number | null
+    hoursPerWeek: string | null
+    id: string
+    location: string
+    pricingStructure: string | null
+    remote: boolean | null
+    title: string
+    type: string
+  }
+  onClick(): void
 }
 
-const keysToIgnore = ['description', 'id', 'title', '__typename']
-
-export default function Job(job: IProps) {
+export default function JobListItem({ job, ...rest }: IProps) {
   return (
-    <Paper>
+    <Paper {...rest}>
       <h3>{job.title}</h3>
-      <p>{job.description}</p>
       <ul>
         {Object.entries(job)
           .filter(([key, val]) => {
