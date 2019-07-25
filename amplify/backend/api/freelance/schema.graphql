@@ -1,8 +1,8 @@
 type Job @model {
   description: String!
   numberOfDays: Int
-  hourlyRate: Int
-  hoursPerWeek: String
+  hourlyRate: Float
+  hoursPerWeek: Float
   id: ID!
   location: String!
   pricingStructure: String
