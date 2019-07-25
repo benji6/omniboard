@@ -30,7 +30,7 @@ export default function Job(props: RouteComponentProps) {
               <>
                 <h2>{data.getJob.title}</h2>
                 <h3>Job description</h3>
-                <p>{data.getJob.description}</p>
+                <p e-util="pre-line">{data.getJob.description}</p>
                 <h3>Key information</h3>
                 <ul>
                   {Object.entries(data.getJob)

@@ -41,7 +41,7 @@ export default function Home({ location, navigate }: RouteComponentProps) {
         replace: true,
       },
     )
-  }, [remoteFilter])
+  }, [remoteFilter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   let filter: ModelJobFilterInput = {}
   if (remoteValue) {
