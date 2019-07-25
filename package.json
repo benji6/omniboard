@@ -4,7 +4,7 @@
     "@reach/router": "^1.2.1",
     "aws-amplify": "^1.1.30",
     "aws-appsync": "^1.8.1",
-    "eri": "^10.8.2",
+    "eri": "^10.9.4",
     "formik": "^1.5.8",
     "graphql-tag": "^2.10.1",
     "react": "^16.8.6",
@@ -37,7 +37,7 @@
     "@types/faker": "^4.1.5",
     "@types/reach__router": "^1.2.4",
     "@types/react": "^16.8.23",
-    "@types/react-dom": "^16.8.4",
+    "@types/react-dom": "^16.8.5",
     "faker": "^4.1.0",
     "prettier": "^1.18.2",
     "typescript": "^3.5.3"

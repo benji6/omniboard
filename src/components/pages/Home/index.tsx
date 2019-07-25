@@ -1,5 +1,12 @@
 import { RouteComponentProps, NavigateFn, WindowLocation } from '@reach/router'
-import { Spinner, PaperGroup, Paper, Toggle } from 'eri'
+import {
+  Spinner,
+  PaperGroup,
+  Paper,
+  Toggle,
+  RadioButtonGroup,
+  RadioButton,
+} from 'eri'
 import gql from 'graphql-tag'
 import React from 'react'
 import { Query } from 'react-apollo'
@@ -11,13 +18,32 @@ import {
 } from '../../../API'
 import JobListItem from './JobListItem'
 
-export default function Home({ location, navigate }: RouteComponentProps) {
-  const [filtersApplied, setFiltersApplied] = React.useState(false)
-  const [remoteFilter, setRemoteFilter] = React.useState(false)
+type TRemoteFilter = '' | 'true' | 'false'
 
-  let filter: ModelJobFilterInput = {}
+export default function Home({ location, navigate }: RouteComponentProps) {
   const searchParams = new URLSearchParams((location as WindowLocation).search)
   const remoteValue = searchParams.get('remote')
+  const [filtersApplied, setFiltersApplied] = React.useState(
+    Boolean(remoteValue),
+  )
+  const [remoteFilter, setRemoteFilter] = React.useState<TRemoteFilter>(
+    remoteValue && ['false', 'true', ''].includes(remoteValue)
+      ? (remoteValue as TRemoteFilter)
+      : '',
+  )
+
+  React.useEffect(() => {
+    if (remoteFilter) searchParams.set('remote', remoteFilter)
+    else searchParams.delete('remote')
+    ;(navigate as NavigateFn)(
+      `/${[...searchParams].length ? '?' + searchParams : ''}`,
+      {
+        replace: true,
+      },
+    )
+  }, [remoteFilter])
+
+  let filter: ModelJobFilterInput = {}
   if (remoteValue) {
     try {
       const remote = JSON.parse(remoteValue)
@@ -37,22 +63,29 @@ export default function Home({ location, navigate }: RouteComponentProps) {
           onChange={() => setFiltersApplied(!filtersApplied)}
         />
         {filtersApplied && (
-          <Toggle
-            checked={remoteFilter}
-            label="Remote"
-            onChange={() => {
-              const newRemoteFilter = !remoteFilter
-              if (newRemoteFilter) searchParams.set('remote', 'true')
-              else searchParams.delete('remote')
-              ;(navigate as NavigateFn)(
-                `/${[...searchParams].length ? '?' + searchParams : ''}`,
-                {
-                  replace: true,
-                },
-              )
-              setRemoteFilter(newRemoteFilter)
-            }}
-          />
+          <RadioButtonGroup label="Remote">
+            <RadioButton
+              checked={remoteFilter === ''}
+              name="remote"
+              onChange={() => setRemoteFilter('')}
+            >
+              Off
+            </RadioButton>
+            <RadioButton
+              checked={remoteFilter === 'true'}
+              name="remote"
+              onChange={() => setRemoteFilter('true')}
+            >
+              Remote
+            </RadioButton>
+            <RadioButton
+              checked={remoteFilter === 'false'}
+              name="remote"
+              onChange={() => setRemoteFilter('false')}
+            >
+              Not remote
+            </RadioButton>
+          </RadioButtonGroup>
         )}
       </Paper>
       <Query<ListJobsQuery, ListJobsQueryVariables>
