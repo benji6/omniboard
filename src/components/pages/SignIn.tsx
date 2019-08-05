@@ -44,7 +44,7 @@ export default function SignIn({ navigate }: RouteComponentProps) {
                   break
                 case 'UserNotConfirmedException':
                   setSubmitError(
-                    'Please check your email to verify your email address before continuing',
+                    'Check your email to verify your email address before continuing',
                   )
                   break
                 case 'NotAuthorizedException':
@@ -53,7 +53,7 @@ export default function SignIn({ navigate }: RouteComponentProps) {
                   break
                 default:
                   setSubmitError(
-                    'Something has gone wrong, please check the data you have entered and try again',
+                    'Something has gone wrong, check the data you have entered and try again',
                   )
               }
             } finally {

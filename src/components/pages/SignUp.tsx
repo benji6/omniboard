@@ -48,7 +48,7 @@ export default function SignUp(_: RouteComponentProps) {
                   break
                 default:
                   setSubmitError(
-                    'Something has gone wrong, please check the data you have entered and try again',
+                    'Something has gone wrong, check the data you have entered and try again',
                   )
               }
             } finally {
