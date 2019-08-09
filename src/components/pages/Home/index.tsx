@@ -21,7 +21,7 @@ import JobListItem from './JobListItem'
 type TRemoteFilter = '' | 'true' | 'false'
 
 export default function Home({ location, navigate }: RouteComponentProps) {
-  const searchParams = new URLSearchParams((location as WindowLocation).search)
+  let searchParams = new URLSearchParams((location as WindowLocation).search)
   const remoteValue = searchParams.get('remote')
   const [filtersApplied, setFiltersApplied] = React.useState(
     Boolean(remoteValue),
@@ -33,7 +33,8 @@ export default function Home({ location, navigate }: RouteComponentProps) {
   )
 
   React.useEffect(() => {
-    if (remoteFilter) searchParams.set('remote', remoteFilter)
+    if (!filtersApplied) searchParams = new URLSearchParams()
+    else if (remoteFilter) searchParams.set('remote', remoteFilter)
     else searchParams.delete('remote')
     ;(navigate as NavigateFn)(
       `/${[...searchParams].length ? '?' + searchParams : ''}`,
@@ -41,7 +42,7 @@ export default function Home({ location, navigate }: RouteComponentProps) {
         replace: true,
       },
     )
-  }, [remoteFilter]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [filtersApplied, remoteFilter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   let filter: ModelJobFilterInput = {}
   if (remoteValue) {
