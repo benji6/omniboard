@@ -6,6 +6,7 @@ import {
   Toggle,
   RadioButtonGroup,
   RadioButton,
+  TextField,
 } from 'eri'
 import gql from 'graphql-tag'
 import React from 'react'
@@ -18,39 +19,44 @@ import {
 } from '../../../API'
 import JobListItem from './JobListItem'
 
-type TRemoteFilter = '' | 'true' | 'false'
+const initialSearchParams = new URLSearchParams(location.search) // eslint-disable-line no-restricted-globals
+const initialSearchText = initialSearchParams.get('searchText') || ''
+let initialRemoteValue: undefined | boolean
 
-export default function Home({ location, navigate }: RouteComponentProps) {
-  let searchParams = new URLSearchParams((location as WindowLocation).search)
-  const remoteValue = searchParams.get('remote')
+const initialRemoteString = initialSearchParams.get('remote')
+
+if (initialRemoteString) {
+  try {
+    const remote = JSON.parse(initialRemoteString)
+    if (typeof remote === 'boolean') initialRemoteValue = remote
+  } catch {}
+}
+
+export default function Home({ navigate }: RouteComponentProps) {
   const [filtersApplied, setFiltersApplied] = React.useState(
-    Boolean(remoteValue),
+    initialRemoteValue !== undefined,
   )
-  const [remoteFilter, setRemoteFilter] = React.useState<TRemoteFilter>(
-    remoteValue && ['false', 'true', ''].includes(remoteValue)
-      ? (remoteValue as TRemoteFilter)
-      : '',
-  )
+  const [remoteValue, setRemoteValue] = React.useState(initialRemoteValue)
+  const [searchText, setSearchText] = React.useState(initialSearchText)
 
   React.useEffect(() => {
-    if (!filtersApplied) searchParams = new URLSearchParams()
-    else if (remoteFilter) searchParams.set('remote', remoteFilter)
-    else searchParams.delete('remote')
+    const searchParams = new URLSearchParams()
+    if (filtersApplied && remoteValue !== undefined)
+      searchParams.set('remote', String(remoteValue))
+    if (searchText) searchParams.set('searchText', searchText)
     ;(navigate as NavigateFn)(
       `/${[...searchParams].length ? '?' + searchParams : ''}`,
       {
         replace: true,
       },
     )
-  }, [filtersApplied, remoteFilter]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [filtersApplied, remoteValue, searchText]) // eslint-disable-line react-hooks/exhaustive-deps
 
   let filter: ModelJobFilterInput = {}
-  if (remoteValue) {
-    try {
-      const remote = JSON.parse(remoteValue)
-      if (typeof remote === 'boolean') filter.remote = { eq: remote }
-    } catch {}
-  }
+
+  if (filtersApplied && remoteValue !== undefined)
+    filter.remote = { eq: remoteValue }
+  if (searchText) filter.title = { contains: searchText }
 
   const variables = Object.keys(filter).length ? { filter } : undefined
 
@@ -58,6 +64,13 @@ export default function Home({ location, navigate }: RouteComponentProps) {
     <PaperGroup>
       <Paper>
         <h2>Job list</h2>
+        <TextField
+          label="Search"
+          onChange={e => setSearchText(e.target.value)}
+          value={searchText}
+        />
+      </Paper>
+      <Paper>
         <Toggle
           checked={filtersApplied}
           label="Toggle filters"
@@ -66,23 +79,23 @@ export default function Home({ location, navigate }: RouteComponentProps) {
         {filtersApplied && (
           <RadioButtonGroup label="Remote">
             <RadioButton
-              checked={remoteFilter === ''}
+              checked={remoteValue === undefined}
               name="remote"
-              onChange={() => setRemoteFilter('')}
+              onChange={() => setRemoteValue(undefined)}
             >
               Off
             </RadioButton>
             <RadioButton
-              checked={remoteFilter === 'true'}
+              checked={remoteValue === true}
               name="remote"
-              onChange={() => setRemoteFilter('true')}
+              onChange={() => setRemoteValue(true)}
             >
               Remote
             </RadioButton>
             <RadioButton
-              checked={remoteFilter === 'false'}
+              checked={remoteValue === false}
               name="remote"
-              onChange={() => setRemoteFilter('false')}
+              onChange={() => setRemoteValue(false)}
             >
               Not remote
             </RadioButton>
