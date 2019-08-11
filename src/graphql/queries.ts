@@ -34,3 +34,31 @@ export const listJobs = `query ListJobs($filter: ModelJobFilterInput, $limit: In
   }
 }
 `;
+export const searchJobs = `query SearchJobs(
+  $filter: SearchableJobFilterInput
+  $sort: SearchableJobSortInput
+  $limit: Int
+  $nextToken: Int
+) {
+  searchJobs(
+    filter: $filter
+    sort: $sort
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      description
+      numberOfDays
+      hourlyRate
+      hoursPerWeek
+      id
+      location
+      pricingStructure
+      remote
+      title
+      type
+    }
+    nextToken
+  }
+}
+`;
