@@ -1,4 +1,4 @@
-import { RouteComponentProps, NavigateFn, WindowLocation } from '@reach/router'
+import { RouteComponentProps, NavigateFn } from '@reach/router'
 import {
   Spinner,
   PaperGroup,

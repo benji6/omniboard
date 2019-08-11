@@ -10,7 +10,7 @@ interface IProps {
   open: boolean
 }
 
-export default withApollo(function SignOutDialog({
+export default withApollo<IProps>(function SignOutDialog({
   client,
   onClose,
   open,
