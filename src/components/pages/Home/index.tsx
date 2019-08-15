@@ -20,7 +20,9 @@ import {
 import JobListItem from './JobListItem'
 
 const initialSearchParams = new URLSearchParams(location.search) // eslint-disable-line no-restricted-globals
-const initialSearchText = initialSearchParams.get('searchText') || ''
+const initialSearchDescription =
+  initialSearchParams.get('searchDescription') || ''
+const initialSearchText = initialSearchParams.get('searchTitle') || ''
 let initialRemoteValue: undefined | boolean
 
 const initialRemoteString = initialSearchParams.get('remote')
@@ -37,26 +39,35 @@ export default function Home({ navigate }: RouteComponentProps) {
     initialRemoteValue !== undefined,
   )
   const [remoteValue, setRemoteValue] = React.useState(initialRemoteValue)
-  const [searchText, setSearchText] = React.useState(initialSearchText)
+  const [searchDescription, setSearchDescription] = React.useState(
+    initialSearchDescription,
+  )
+  const [searchTitle, setSearchTitle] = React.useState(initialSearchText)
 
   React.useEffect(() => {
     const searchParams = new URLSearchParams()
     if (filtersApplied && remoteValue !== undefined)
       searchParams.set('remote', String(remoteValue))
-    if (searchText) searchParams.set('searchText', searchText)
+    if (searchDescription)
+      searchParams.set('searchDescription', searchDescription)
+    if (searchTitle) searchParams.set('searchTitle', searchTitle)
     ;(navigate as NavigateFn)(
       `/${[...searchParams].length ? '?' + searchParams : ''}`,
       {
         replace: true,
       },
     )
-  }, [filtersApplied, remoteValue, searchText]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [filtersApplied, remoteValue, searchDescription, searchTitle]) // eslint-disable-line react-hooks/exhaustive-deps
 
   let filter: SearchableJobFilterInput = {}
 
   if (filtersApplied && remoteValue !== undefined)
     filter.remote = { eq: remoteValue }
-  if (searchText) filter.title = { match: searchText }
+  if (searchDescription)
+    filter.description = {
+      matchPhrase: searchDescription,
+    }
+  if (searchTitle) filter.title = { match: searchTitle }
 
   const variables = Object.keys(filter).length ? { filter } : undefined
 
@@ -66,8 +77,14 @@ export default function Home({ navigate }: RouteComponentProps) {
         <h2>Job list</h2>
         <TextField
           label="Job title"
-          onChange={e => setSearchText(e.target.value)}
-          value={searchText}
+          onChange={e => setSearchTitle(e.target.value)}
+          value={searchTitle}
+        />
+        <TextField
+          label="Job description"
+          supportiveText="Search for a phrase in the job description"
+          onChange={e => setSearchDescription(e.target.value)}
+          value={searchDescription}
         />
       </Paper>
       <Paper>
