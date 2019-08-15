@@ -11,11 +11,11 @@ import {
 import gql from 'graphql-tag'
 import React from 'react'
 import { Query } from 'react-apollo'
-import { listJobs } from '../../../graphql/queries'
+import { searchJobs } from '../../../graphql/queries'
 import {
-  ListJobsQueryVariables,
-  ListJobsQuery,
-  ModelJobFilterInput,
+  SearchableJobFilterInput,
+  SearchJobsQuery,
+  SearchJobsQueryVariables,
 } from '../../../API'
 import JobListItem from './JobListItem'
 
@@ -52,11 +52,11 @@ export default function Home({ navigate }: RouteComponentProps) {
     )
   }, [filtersApplied, remoteValue, searchText]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  let filter: ModelJobFilterInput = {}
+  let filter: SearchableJobFilterInput = {}
 
   if (filtersApplied && remoteValue !== undefined)
     filter.remote = { eq: remoteValue }
-  if (searchText) filter.title = { contains: searchText }
+  if (searchText) filter.title = { match: searchText }
 
   const variables = Object.keys(filter).length ? { filter } : undefined
 
@@ -65,7 +65,7 @@ export default function Home({ navigate }: RouteComponentProps) {
       <Paper>
         <h2>Job list</h2>
         <TextField
-          label="Search"
+          label="Job title"
           onChange={e => setSearchText(e.target.value)}
           value={searchText}
         />
@@ -102,15 +102,21 @@ export default function Home({ navigate }: RouteComponentProps) {
           </RadioButtonGroup>
         )}
       </Paper>
-      <Query<ListJobsQuery, ListJobsQueryVariables>
-        query={gql(listJobs)}
+      <Query<SearchJobsQuery, SearchJobsQueryVariables>
+        query={gql(searchJobs)}
         variables={variables}
       >
         {({ data, error, loading }) => {
           if (loading) return <Spinner />
-          if (error || !data || !data.listJobs || !data.listJobs.items)
+          if (error || !data || !data.searchJobs || !data.searchJobs.items)
             return <p>Something went wrong, please try again</p>
-          return data.listJobs.items.map((job: any) => (
+          if (!data.searchJobs.items.length)
+            return (
+              <Paper>
+                <p e-util="center">No results found</p>
+              </Paper>
+            )
+          return data.searchJobs.items.map((job: any) => (
             <JobListItem
               job={job}
               key={job.id}
