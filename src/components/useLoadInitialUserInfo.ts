@@ -8,14 +8,15 @@ export default function useLoadInitialUserInfo(
   React.useEffect(() => {
     let aborted = false
     ;(async function() {
-      const {
-        attributes: { email: newEmail },
-      } = await Auth.currentAuthenticatedUser()
-      if (aborted) return
-      dispatch({
-        type: 'setUserEmail',
-        payload: newEmail,
-      })
+      try {
+        const {
+          attributes: { email: newEmail },
+        } = await Auth.currentAuthenticatedUser()
+        if (aborted) return
+        dispatch({ type: 'setUserEmail', payload: newEmail })
+      } finally {
+        dispatch({ type: 'setLoading', payload: false })
+      }
     })()
     return () => {
       aborted = true
