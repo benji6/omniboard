@@ -1,5 +1,5 @@
 import Auth from '@aws-amplify/auth'
-import { RouteComponentProps, Link } from '@reach/router'
+import { Link, NavigateFn, RouteComponentProps } from '@reach/router'
 import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
 import React from 'react'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
@@ -21,7 +21,7 @@ const initialValues = {
   password: '',
 }
 
-export default function SignUp(_: RouteComponentProps) {
+export default function SignUp({ navigate }: RouteComponentProps) {
   const [submitError, setSubmitError] = React.useState<string | undefined>()
 
   return (
@@ -36,6 +36,7 @@ export default function SignUp(_: RouteComponentProps) {
                 username: email,
                 password,
               })
+              ;(navigate as NavigateFn)('/verify')
             } catch (e) {
               switch (e.code) {
                 case 'NetworkError':
@@ -72,6 +73,7 @@ export default function SignUp(_: RouteComponentProps) {
                       form.errors.email
                     }
                     label="Email"
+                    type="email"
                   />
                 )}
               </Field>

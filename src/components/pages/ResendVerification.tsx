@@ -1,55 +1,51 @@
 import Auth from '@aws-amplify/auth'
-import { RouteComponentProps, Link, NavigateFn } from '@reach/router'
+import { Link, NavigateFn, RouteComponentProps } from '@reach/router'
 import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
-import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import React from 'react'
+import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import {
   emailValidator,
-  passwordValidator,
   composeValidators,
   requiredValidator,
 } from '../../validators'
 import { networkErrorMessage } from '../../constants'
-import { useAppState } from '../AppStateContainer'
 
 interface IFormValues {
   email: string
-  password: string
 }
 
 const initialValues = {
   email: '',
-  password: '',
 }
 
-export default function SignIn({ navigate }: RouteComponentProps) {
+export default function SignUp({ navigate }: RouteComponentProps) {
   const [submitError, setSubmitError] = React.useState<string | undefined>()
-  const dispatch = useAppState()[1]
 
   return (
     <PaperGroup>
       <Paper>
-        <h2>Sign in</h2>
+        <h2>Resend verification email</h2>
         <Formik
           initialValues={initialValues}
-          onSubmit={async ({ email, password }, { setSubmitting }) => {
+          onSubmit={async ({ email }, { setSubmitting }) => {
             try {
-              const user = await Auth.signIn(email, password)
-              dispatch({ payload: user.attributes.email, type: 'setUserEmail' })
-              ;(navigate as NavigateFn)('/')
+              await Auth.resendSignUp(email)
+              ;(navigate as NavigateFn)('/verify')
             } catch (e) {
+              console.log(e)
               switch (e.code) {
                 case 'NetworkError':
                   setSubmitError(networkErrorMessage)
                   break
-                case 'UserNotConfirmedException':
+                case 'InvalidParameterException':
                   setSubmitError(
-                    'Check your email to verify your email address before continuing',
+                    'Email address not recognised, try signing up instead',
                   )
                   break
-                case 'NotAuthorizedException':
                 case 'UserNotFoundException':
-                  setSubmitError('Incorrect email/password')
+                  setSubmitError(
+                    'Email address has already been confirmed, please sign in',
+                  )
                   break
                 default:
                   setSubmitError(
@@ -81,38 +77,18 @@ export default function SignIn({ navigate }: RouteComponentProps) {
                   />
                 )}
               </Field>
-              <Field
-                name="password"
-                validate={composeValidators(
-                  requiredValidator,
-                  passwordValidator,
-                )}
-              >
-                {({ field, form }: FieldProps<IFormValues>) => (
-                  <TextField
-                    {...field}
-                    autoComplete="current-password"
-                    error={
-                      form.submitCount &&
-                      form.touched.password &&
-                      form.errors.password
-                    }
-                    label="Password"
-                    type="password"
-                  />
-                )}
-              </Field>
               {submitError && (
                 <p e-util="center">
                   <small e-util="negative">{submitError}</small>
                 </p>
               )}
               <ButtonGroup>
-                <Button disabled={isSubmitting}>Sign in</Button>
+                <Button disabled={isSubmitting}>Resend</Button>
               </ButtonGroup>
               <p e-util="center">
                 <small>
-                  Don't have an account? <Link to="/sign-up">Sign up</Link>!
+                  Looking for the <Link to="/sign-in">Sign in</Link> or{' '}
+                  <Link to="/sign-up">Sign up</Link> pages?
                 </small>
               </p>
             </Form>
