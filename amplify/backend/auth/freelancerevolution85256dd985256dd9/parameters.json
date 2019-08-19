@@ -1,9 +1,8 @@
 {
-  "identityPoolName": "freelancerevolutionbf7d815f_identitypool_bf7d815f",
-  "allowUnauthenticatedIdentities": false,
-  "openIdLambdaRoleName": "freelabf7d815f_openid_lambda_role",
-  "resourceNameTruncated": "freelabf7d815f",
-  "userPoolName": "freelancerevolutionbf7d815f_userpool_bf7d815f",
+  "identityPoolName": "freelance_revolution85256dd9_identitypool_85256dd9",
+  "allowUnauthenticatedIdentities": true,
+  "resourceNameTruncated": "freela85256dd9",
+  "userPoolName": "freelance_revolution85256dd9_userpool_85256dd9",
   "autoVerifiedAttributes": ["email"],
   "mfaConfiguration": "OFF",
   "mfaTypes": ["SMS Text Message"],
@@ -15,32 +14,25 @@
   "passwordPolicyMinLength": 8,
   "passwordPolicyCharacters": [],
   "requiredAttributes": ["email"],
-  "userpoolClientName": "freelabf7d815f_app_client",
   "userpoolClientGenerateSecret": true,
   "userpoolClientRefreshTokenValidity": 30,
   "userpoolClientWriteAttributes": ["email"],
   "userpoolClientReadAttributes": ["email"],
-  "mfaLambdaRole": "freelabf7d815f_totp_lambda_role",
-  "userpoolClientLambdaRole": "freelabf7d815f_userpoolclient_lambda_role",
+  "userpoolClientLambdaRole": "freela85256dd9_userpoolclient_lambda_role",
   "userpoolClientSetAttributes": false,
-  "resourceName": "freelancerevolutionbf7d815f",
+  "useDefault": "manual",
   "authSelections": "identityPoolAndUserPool",
-  "authRoleName": {
-    "Ref": "AuthRoleName"
-  },
-  "unauthRoleName": {
-    "Ref": "UnauthRoleName"
-  },
+  "resourceName": "freelancerevolution85256dd985256dd9",
+  "thirdPartyAuth": false,
+  "usernameAttributes": ["email"],
+  "triggers": "{}",
+  "hostedUI": false,
   "authRoleArn": {
     "Fn::GetAtt": ["AuthRole", "Arn"]
   },
   "unauthRoleArn": {
     "Fn::GetAtt": ["UnauthRole", "Arn"]
   },
-  "useDefault": "default",
-  "usernameAttributes": ["email"],
-  "additionalQuestions": ["requiredAttributes", "triggers"],
-  "triggers": "{}",
   "parentStack": {
     "Ref": "AWS::StackId"
   },

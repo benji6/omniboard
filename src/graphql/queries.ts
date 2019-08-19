@@ -38,7 +38,7 @@ export const searchJobs = `query SearchJobs(
   $filter: SearchableJobFilterInput
   $sort: SearchableJobSortInput
   $limit: Int
-  $nextToken: Int
+  $nextToken: String
 ) {
   searchJobs(
     filter: $filter

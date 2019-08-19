@@ -300,7 +300,7 @@ export type SearchJobsQueryVariables = {
   filter?: SearchableJobFilterInput | null
   sort?: SearchableJobSortInput | null
   limit?: number | null
-  nextToken?: number | null
+  nextToken?: string | null
 }
 
 export type SearchJobsQuery = {

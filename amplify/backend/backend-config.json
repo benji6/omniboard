@@ -1,24 +1,24 @@
 {
   "auth": {
-    "freelancerevolutionbf7d815f": {
+    "freelancerevolution85256dd985256dd9": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": []
+    }
+  },
+  "api": {
+    "freelancerevolution": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "securityType": "AMAZON_COGNITO_USER_POOLS"
+      }
     }
   },
   "hosting": {
     "S3AndCloudFront": {
       "service": "S3AndCloudFront",
       "providerPlugin": "awscloudformation"
-    }
-  },
-  "api": {
-    "freelance": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
-      "output": {
-        "securityType": "AMAZON_COGNITO_USER_POOLS"
-      }
     }
   }
 }
