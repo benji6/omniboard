@@ -15,7 +15,7 @@ export const getJob = `query GetJob($id: ID!) {
     type
   }
 }
-`;
+`
 export const listJobs = `query ListJobs($filter: ModelJobFilterInput, $limit: Int, $nextToken: String) {
   listJobs(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
@@ -33,7 +33,7 @@ export const listJobs = `query ListJobs($filter: ModelJobFilterInput, $limit: In
     nextToken
   }
 }
-`;
+`
 export const searchJobs = `query SearchJobs(
   $filter: SearchableJobFilterInput
   $sort: SearchableJobSortInput
@@ -61,4 +61,4 @@ export const searchJobs = `query SearchJobs(
     nextToken
   }
 }
-`;
+`

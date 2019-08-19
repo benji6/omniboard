@@ -15,7 +15,7 @@ export const onCreateJob = `subscription OnCreateJob {
     type
   }
 }
-`;
+`
 export const onUpdateJob = `subscription OnUpdateJob {
   onUpdateJob {
     description
@@ -30,7 +30,7 @@ export const onUpdateJob = `subscription OnUpdateJob {
     type
   }
 }
-`;
+`
 export const onDeleteJob = `subscription OnDeleteJob {
   onDeleteJob {
     description
@@ -45,4 +45,4 @@ export const onDeleteJob = `subscription OnDeleteJob {
     type
   }
 }
-`;
+`

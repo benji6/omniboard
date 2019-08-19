@@ -15,7 +15,7 @@ export const createJob = `mutation CreateJob($input: CreateJobInput!) {
     type
   }
 }
-`;
+`
 export const updateJob = `mutation UpdateJob($input: UpdateJobInput!) {
   updateJob(input: $input) {
     description
@@ -30,7 +30,7 @@ export const updateJob = `mutation UpdateJob($input: UpdateJobInput!) {
     type
   }
 }
-`;
+`
 export const deleteJob = `mutation DeleteJob($input: DeleteJobInput!) {
   deleteJob(input: $input) {
     description
@@ -45,4 +45,4 @@ export const deleteJob = `mutation DeleteJob($input: DeleteJobInput!) {
     type
   }
 }
-`;
+`

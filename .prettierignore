@@ -1,0 +1,6 @@
+.*ignore
+*.ico
+*.lock
+*.log
+*.map
+build

@@ -1,10 +1,7 @@
 {
-    "AppSyncApiName": "freelance",
-    "DynamoDBBillingMode": "PAY_PER_REQUEST",
-    "AuthCognitoUserPoolId": {
-        "Fn::GetAtt": [
-            "authfreelancerevolutionbf7d815f",
-            "Outputs.UserPoolId"
-        ]
-    }
+  "AppSyncApiName": "freelance",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": ["authfreelancerevolutionbf7d815f", "Outputs.UserPoolId"]
+  }
 }
