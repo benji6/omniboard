@@ -8,7 +8,7 @@ import Menu from './Menu'
 import AppStateContainer from './AppStateContainer'
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3001', // TODO
+  uri: 'http://localhost:4000', // TODO
 })
 
 export default function App() {

@@ -1,65 +1,54 @@
 import { NavigateFn } from '@reach/router'
-import {
-  Spinner,
-  PaperGroup,
-  Paper,
-  Toggle,
-  RadioButtonGroup,
-  RadioButton,
-  TextField,
-} from 'eri'
+import { Spinner, PaperGroup, Paper, Toggle, TextField } from 'eri'
 import gql from 'graphql-tag'
 import React from 'react'
 import { useDebounce } from 'use-debounce'
-import { searchJobs } from '../../../graphql/queries'
-import { SearchableJobFilterInput } from '../../../API'
-import JobListItem from './JobListItem'
+import PostListItem from './PostListItem'
 import { useQuery } from '@apollo/react-hooks'
+import { IPost } from '../../../types'
+
+const GET_POSTS = gql`
+  {
+    posts {
+      body
+      id
+      location
+      tags
+      title
+    }
+  }
+`
+
+interface IQueryResult {
+  posts: IPost[]
+}
 
 const DEBOUNCE_TIME = 300
 
 const initialSearchParams = new URLSearchParams(location.search) // eslint-disable-line no-restricted-globals
-const initialSearchDescription =
-  initialSearchParams.get('searchDescription') || ''
+const initialSearchBody = initialSearchParams.get('searchBody') || ''
 const initialSearchLocation = initialSearchParams.get('searchLocation') || ''
 const initialSearchTitle = initialSearchParams.get('searchTitle') || ''
 const initialSearchType = initialSearchParams.get('searchType') || ''
-let initialRemoteValue: undefined | boolean
 
 const initialFilterValues = [
-  initialRemoteValue,
-  initialSearchDescription,
+  initialSearchBody,
   initialSearchLocation,
   initialSearchType,
 ]
-
-const initialRemoteString = initialSearchParams.get('remote')
-
-if (initialRemoteString) {
-  try {
-    const remote = JSON.parse(initialRemoteString)
-    if (typeof remote === 'boolean') initialRemoteValue = remote
-  } catch {}
-}
 
 export default function Search({ navigate }: { navigate: NavigateFn }) {
   const [filtersApplied, setFiltersApplied] = React.useState(
     initialFilterValues.some(Boolean),
   )
-  const [remoteValue, setRemoteValue] = React.useState(initialRemoteValue)
-  const [searchDescription, setSearchDescription] = React.useState(
-    initialSearchDescription,
-  )
+  const [searchBody, setSearchBody] = React.useState(initialSearchBody)
   const [searchLocation, setSearchLocation] = React.useState(
     initialSearchLocation,
   )
   const [searchTitle, setSearchTitle] = React.useState(initialSearchTitle)
   const [searchType, setSearchType] = React.useState(initialSearchType)
 
-  const [debouncedSearchDescription] = useDebounce(
-    searchDescription,
-    DEBOUNCE_TIME,
-  )
+  const [debouncedSearchBody] = useDebounce(searchBody, DEBOUNCE_TIME)
   const [debouncedSearchTitle] = useDebounce(searchTitle, DEBOUNCE_TIME)
   const [debouncedSearchType] = useDebounce(searchType, DEBOUNCE_TIME)
   const [debouncedSearchLocation] = useDebounce(searchLocation, DEBOUNCE_TIME)
@@ -67,13 +56,8 @@ export default function Search({ navigate }: { navigate: NavigateFn }) {
   React.useEffect(() => {
     const searchParams = new URLSearchParams()
     if (filtersApplied) {
-      if (remoteValue !== undefined)
-        searchParams.set('remote', String(remoteValue))
-      if (debouncedSearchDescription)
-        searchParams.set(
-          'debouncedSearchDescription',
-          debouncedSearchDescription,
-        )
+      if (debouncedSearchBody)
+        searchParams.set('debouncedSearchBody', debouncedSearchBody)
       if (debouncedSearchLocation)
         searchParams.set('debouncedSearchLocation', debouncedSearchLocation)
       if (debouncedSearchType)
@@ -85,36 +69,31 @@ export default function Search({ navigate }: { navigate: NavigateFn }) {
       replace: true,
     })
   } /* eslint-disable react-hooks/exhaustive-deps */, [
-    debouncedSearchDescription,
+    debouncedSearchBody,
     debouncedSearchLocation,
     debouncedSearchTitle,
     debouncedSearchType,
     filtersApplied,
-    remoteValue,
   ] /* eslint-enable react-hooks/exhaustive-deps */)
 
-  let filter: SearchableJobFilterInput = {}
+  let filter: any = {} // TODO
 
   if (filtersApplied) {
-    if (remoteValue !== undefined) filter.remote = { eq: remoteValue }
     if (debouncedSearchLocation)
       filter.location = { match: debouncedSearchLocation }
-    if (debouncedSearchDescription)
-      filter.description = { matchPhrase: debouncedSearchDescription }
+    if (debouncedSearchBody) filter.body = { matchPhrase: debouncedSearchBody }
     if (debouncedSearchType) filter.type = { match: debouncedSearchType }
   }
   if (debouncedSearchTitle) filter.title = { match: debouncedSearchTitle }
 
-  const variables = Object.keys(filter).length ? { filter } : undefined
-
-  const { data, error, loading } = useQuery(gql(searchJobs, { variables }))
+  const { data, error, loading } = useQuery<IQueryResult>(GET_POSTS)
 
   return (
     <PaperGroup>
       <Paper>
-        <h2>Job list</h2>
+        <h2>Post list</h2>
         <TextField
-          label="Job title"
+          label="Post title"
           onChange={e => setSearchTitle(e.target.value)}
           value={searchTitle}
         />
@@ -128,10 +107,10 @@ export default function Search({ navigate }: { navigate: NavigateFn }) {
         {filtersApplied && (
           <>
             <TextField
-              label="Job description"
-              supportiveText="Search for a phrase in the job description"
-              onChange={e => setSearchDescription(e.target.value)}
-              value={searchDescription}
+              label="Post body"
+              supportiveText="Search for a phrase in the post body"
+              onChange={e => setSearchBody(e.target.value)}
+              value={searchBody}
             />
             <TextField
               label="Type"
@@ -143,46 +122,23 @@ export default function Search({ navigate }: { navigate: NavigateFn }) {
               onChange={e => setSearchLocation(e.target.value)}
               value={searchLocation}
             />
-            <RadioButtonGroup label="Remote">
-              <RadioButton
-                checked={remoteValue === undefined}
-                name="remote"
-                onChange={() => setRemoteValue(undefined)}
-              >
-                Off
-              </RadioButton>
-              <RadioButton
-                checked={remoteValue === true}
-                name="remote"
-                onChange={() => setRemoteValue(true)}
-              >
-                Remote
-              </RadioButton>
-              <RadioButton
-                checked={remoteValue === false}
-                name="remote"
-                onChange={() => setRemoteValue(false)}
-              >
-                Not remote
-              </RadioButton>
-            </RadioButtonGroup>
           </>
         )}
       </Paper>
       {loading ? (
         <Spinner />
-      ) : error || !data || !data.searchJobs || !data.searchJobs.items ? (
+      ) : error || !data ? (
         <p>Something went wrong, please try again</p>
-      ) : !data.searchJobs.items.length ? (
+      ) : !data.posts.length ? (
         <Paper>
           <p e-util="center">No results found</p>
         </Paper>
       ) : (
-        data.searchJobs.items.map((job: any) => (
-          <JobListItem
-            job={job}
-            key={job.id}
-            onClick={() => navigate(`/jobs/${job.id}`)}
+        data.posts.map((post: IPost) => (
+          <PostListItem
+            key={post.id}
+            onClick={() => navigate(`/posts/${post.id}`)}
+            post={post}
           />
         ))
       )}

@@ -4,37 +4,59 @@ import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import gql from 'graphql-tag'
 import React from 'react'
-import { createJob } from '../../graphql/mutations'
 import { requiredValidator } from '../../validators'
 import { networkErrorMessage } from '../../constants'
 
+export const CREATE_POST = gql(`mutation CreatePost($input: CreatePostInput!) {
+  createPost(input: $input) {
+    body
+    location
+    tags
+    title
+  }
+}
+`)
+
 interface IFormValues {
-  description: string
+  body: string
   location: string
+  tags: string
   title: string
-  type: string
 }
 
 const initialValues = {
-  description: '',
+  body: '',
   location: '',
+  tags: '',
   title: '',
-  type: '',
 }
 
-export default function CreateJob(_: RouteComponentProps) {
+interface IMutationVariables {
+  input: {
+    body: string
+    location: string
+    tags: string[]
+    title: string
+  }
+}
+
+export default function CreatePost(_: RouteComponentProps) {
   const [submitError, setSubmitError] = React.useState<string | undefined>()
-  const [create] = useMutation(gql(createJob))
+  const [create] = useMutation<unknown, IMutationVariables>(CREATE_POST)
 
   return (
     <PaperGroup>
       <Paper>
-        <h2>Create job ad</h2>(
+        <h2>Create post</h2>
         <Formik
           initialValues={initialValues}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              await create({ variables: { input: values } })
+              await create({
+                variables: {
+                  input: { ...values, tags: values.tags.split(' ') },
+                },
+              })
             } catch {
               setSubmitError(networkErrorMessage)
             } finally {
@@ -57,17 +79,6 @@ export default function CreateJob(_: RouteComponentProps) {
                   />
                 )}
               </Field>
-              <Field name="type" validate={requiredValidator}>
-                {({ field, form }: FieldProps<IFormValues>) => (
-                  <TextField
-                    {...field}
-                    error={
-                      form.submitCount && form.touched.type && form.errors.type
-                    }
-                    label="Type"
-                  />
-                )}
-              </Field>
               <Field name="location" validate={requiredValidator}>
                 {({ field, form }: FieldProps<IFormValues>) => (
                   <TextField
@@ -81,16 +92,25 @@ export default function CreateJob(_: RouteComponentProps) {
                   />
                 )}
               </Field>
-              <Field name="description" validate={requiredValidator}>
+              <Field name="tags" validate={requiredValidator}>
                 {({ field, form }: FieldProps<IFormValues>) => (
                   <TextField
                     {...field}
                     error={
-                      form.submitCount &&
-                      form.touched.description &&
-                      form.errors.description
+                      form.submitCount && form.touched.tags && form.errors.tags
                     }
-                    label="Description"
+                    label="Tags"
+                  />
+                )}
+              </Field>
+              <Field name="body" validate={requiredValidator}>
+                {({ field, form }: FieldProps<IFormValues>) => (
+                  <TextField
+                    {...field}
+                    error={
+                      form.submitCount && form.touched.body && form.errors.body
+                    }
+                    label="Body"
                   />
                 )}
               </Field>

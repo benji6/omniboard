@@ -53,8 +53,8 @@ export default function Menu({ handleMenuClose, open }: IProps) {
           </li>
           {userEmail ? (
             <li>
-              <Link onClick={handleMenuClose} to="jobs/create">
-                Create job ad
+              <Link onClick={handleMenuClose} to="posts/create">
+                Create post
               </Link>
             </li>
           ) : (
