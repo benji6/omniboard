@@ -19,11 +19,10 @@ export default function Home({ navigate }: RouteComponentProps) {
   ) : (
     <PaperGroup>
       <Paper>
-        <h2>Welcome to Freelance Revolution!</h2>
+        <h2>Welcome to Omniboard!</h2>
         <p>
-          Freelance Revolution is the place to come to for finding new
-          opportunities. Whether you're a freelancer or an employer, we make it
-          easy to find what you're looking for!
+          Omniboard is the place to come to for finding new opportunities. We
+          make it easy to find what you're looking for!
         </p>
         <br />
         <p e-util="center">

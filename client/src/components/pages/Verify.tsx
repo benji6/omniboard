@@ -11,8 +11,8 @@ export default function Verify(_: RouteComponentProps) {
           Check your email and click the link to confirm your email address.
         </p>
         <p>
-          When you're finished come back to Freelance Revolution to sign in and
-          get started!
+          When you're finished come back to Omniboard to sign in and get
+          started!
         </p>
         <p e-util="center">
           <small>

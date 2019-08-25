@@ -22,7 +22,7 @@ export default function App() {
       <AppStateContainer>
         <Header>
           <h1>
-            <Link to="/">Freelance Revolution</Link>
+            <Link to="/">Omniboard</Link>
           </h1>
           <MenuButton onClick={handleMenuOpen} />
         </Header>
