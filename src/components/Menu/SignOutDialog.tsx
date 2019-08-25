@@ -1,8 +1,7 @@
-import Auth from '@aws-amplify/auth'
+import { useApolloClient } from '@apollo/react-hooks'
 import { navigate } from '@reach/router'
 import { Dialog, ButtonGroup, Button } from 'eri'
 import * as React from 'react'
-import { withApollo, WithApolloClient } from 'react-apollo'
 import { useAppState } from '../AppStateContainer'
 
 interface IProps {
@@ -10,18 +9,15 @@ interface IProps {
   open: boolean
 }
 
-export default withApollo<IProps>(function SignOutDialog({
-  client,
-  onClose,
-  open,
-}: WithApolloClient<IProps>) {
+export default function SignOutDialog({ onClose, open }: IProps) {
   const [isLoading, setIsLoading] = React.useState(false)
   const dispatch = useAppState()[1]
+  const client = useApolloClient()
 
   const handleSignOut = async () => {
     setIsLoading(true)
     try {
-      await Auth.signOut()
+      // TODO - sign out
     } finally {
       client.resetStore()
       onClose()
@@ -48,4 +44,4 @@ export default withApollo<IProps>(function SignOutDialog({
       </ButtonGroup>
     </Dialog>
   )
-})
+}

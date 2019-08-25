@@ -1,9 +1,3 @@
 *.log
-amplify/.config/local-*
-amplify/\#current-cloud-backend
-amplify/backend/amplify-meta.json
-amplify/backend/awscloudformation
-aws-exports.js
-awsconfiguration.json
 build
 node_modules

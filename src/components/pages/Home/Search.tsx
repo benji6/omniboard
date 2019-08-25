@@ -10,15 +10,11 @@ import {
 } from 'eri'
 import gql from 'graphql-tag'
 import React from 'react'
-import { Query } from 'react-apollo'
 import { useDebounce } from 'use-debounce'
 import { searchJobs } from '../../../graphql/queries'
-import {
-  SearchableJobFilterInput,
-  SearchJobsQuery,
-  SearchJobsQueryVariables,
-} from '../../../API'
+import { SearchableJobFilterInput } from '../../../API'
 import JobListItem from './JobListItem'
+import { useQuery } from '@apollo/react-hooks'
 
 const DEBOUNCE_TIME = 300
 
@@ -111,6 +107,8 @@ export default function Search({ navigate }: { navigate: NavigateFn }) {
 
   const variables = Object.keys(filter).length ? { filter } : undefined
 
+  const { data, error, loading } = useQuery(gql(searchJobs, { variables }))
+
   return (
     <PaperGroup>
       <Paper>
@@ -171,29 +169,23 @@ export default function Search({ navigate }: { navigate: NavigateFn }) {
           </>
         )}
       </Paper>
-      <Query<SearchJobsQuery, SearchJobsQueryVariables>
-        query={gql(searchJobs)}
-        variables={variables}
-      >
-        {({ data, error, loading }) => {
-          if (loading) return <Spinner />
-          if (error || !data || !data.searchJobs || !data.searchJobs.items)
-            return <p>Something went wrong, please try again</p>
-          if (!data.searchJobs.items.length)
-            return (
-              <Paper>
-                <p e-util="center">No results found</p>
-              </Paper>
-            )
-          return data.searchJobs.items.map((job: any) => (
-            <JobListItem
-              job={job}
-              key={job.id}
-              onClick={() => navigate(`/jobs/${job.id}`)}
-            />
-          ))
-        }}
-      </Query>
+      {loading ? (
+        <Spinner />
+      ) : error || !data || !data.searchJobs || !data.searchJobs.items ? (
+        <p>Something went wrong, please try again</p>
+      ) : !data.searchJobs.items.length ? (
+        <Paper>
+          <p e-util="center">No results found</p>
+        </Paper>
+      ) : (
+        data.searchJobs.items.map((job: any) => (
+          <JobListItem
+            job={job}
+            key={job.id}
+            onClick={() => navigate(`/jobs/${job.id}`)}
+          />
+        ))
+      )}
     </PaperGroup>
   )
 }

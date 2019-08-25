@@ -2,10 +2,9 @@ import { Button } from 'eri'
 import * as faker from 'faker'
 import gql from 'graphql-tag'
 import * as React from 'react'
-import { Mutation } from 'react-apollo'
 import jobDescriptions from './jobDescriptions'
-import { CreateJobMutation, CreateJobMutationVariables } from '../API'
 import { createJob } from '../graphql/mutations'
+import { useMutation } from '@apollo/react-hooks'
 ;(faker as any).locale = 'en_GB'
 
 const integerBetween = (min: number, max: number): number =>
@@ -37,23 +36,15 @@ const generateFakeJobs = (n: number) => {
 }
 
 export default function CreateFakeJobs({ n }: { n: number }) {
+  const [create] = useMutation(gql(createJob))
+
   return (
-    <Mutation<CreateJobMutation, CreateJobMutationVariables>
-      mutation={gql(createJob)}
+    <Button
+      onClick={() =>
+        generateFakeJobs(n).forEach(input => create({ variables: { input } }))
+      }
     >
-      {create => {
-        return (
-          <Button
-            onClick={() =>
-              generateFakeJobs(n).forEach(input =>
-                create({ variables: { input } }),
-              )
-            }
-          >
-            Click to create {n} fake job{n === 1 ? '' : 's'}
-          </Button>
-        )
-      }}
-    </Mutation>
+      Click to create {n} fake job{n === 1 ? '' : 's'}
+    </Button>
   )
 }

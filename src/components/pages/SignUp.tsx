@@ -1,4 +1,3 @@
-import Auth from '@aws-amplify/auth'
 import { Link, NavigateFn, RouteComponentProps } from '@reach/router'
 import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
 import React from 'react'
@@ -32,10 +31,7 @@ export default function SignUp({ navigate }: RouteComponentProps) {
           initialValues={initialValues}
           onSubmit={async ({ email, password }, { setSubmitting }) => {
             try {
-              await Auth.signUp({
-                username: email,
-                password,
-              })
+              // TODO sign up
               ;(navigate as NavigateFn)('/verify')
             } catch (e) {
               switch (e.code) {

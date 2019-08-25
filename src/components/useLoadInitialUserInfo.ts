@@ -1,4 +1,3 @@
-import Auth from '@aws-amplify/auth'
 import * as React from 'react'
 import { appStateReducer } from './AppStateContainer'
 
@@ -9,9 +8,8 @@ export default function useLoadInitialUserInfo(
     let aborted = false
     ;(async function() {
       try {
-        const {
-          attributes: { email: newEmail },
-        } = await Auth.currentAuthenticatedUser()
+        // TODO - load user info
+        const newEmail = 'todo@email.com'
         if (aborted) return
         dispatch({ type: 'setUserEmail', payload: newEmail })
       } finally {

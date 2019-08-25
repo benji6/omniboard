@@ -1,4 +1,3 @@
-import Auth from '@aws-amplify/auth'
 import { RouteComponentProps, Link, NavigateFn } from '@reach/router'
 import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
@@ -34,8 +33,9 @@ export default function SignIn({ navigate }: RouteComponentProps) {
           initialValues={initialValues}
           onSubmit={async ({ email, password }, { setSubmitting }) => {
             try {
-              const user = await Auth.signIn(email, password)
-              dispatch({ payload: user.attributes.email, type: 'setUserEmail' })
+              // TODO sign in
+              // const user = await Auth.signIn(email, password)
+              dispatch({ payload: 'todo@email.com', type: 'setUserEmail' })
               ;(navigate as NavigateFn)('/')
             } catch (e) {
               switch (e.code) {
