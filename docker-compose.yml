@@ -1,12 +1,13 @@
 version: '3'
 services:
   api:
-    build: api
+    build:
+      args:
+        node_env: development
+      context: api
     entrypoint:
       - yarn
       - start
-    environment:
-      - NODE_ENV=development
     links:
       - database
     ports:
