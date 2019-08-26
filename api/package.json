@@ -1,15 +1,25 @@
 {
   "name": "api",
   "private": true,
-  "main": "src/index.js",
+  "main": "build",
   "scripts": {
-    "start": "nodemon ."
+    "build": "rm -rf build && tsc",
+    "format": "prettier --write '**/*'",
+    "server:watch": "nodemon .",
+    "start": "rm -rf build && run-p tsc:watch server:watch",
+    "test": "run-p test:*",
+    "test:format": "prettier --check '**/*'",
+    "test:types": "tsc --noEmit",
+    "tsc:watch": "tsc -w"
   },
   "dependencies": {
     "apollo-server": "^2.9.0",
     "graphql": "^14.5.3"
   },
   "devDependencies": {
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.18.2",
+    "typescript": "^3.5.3"
   }
 }

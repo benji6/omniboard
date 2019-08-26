@@ -1,9 +1,19 @@
-FROM node:10-alpine
-WORKDIR /usr/src/app
+FROM node:10-slim as deps
 COPY package.json yarn.lock ./
-ARG node_env=production
-ENV NODE_ENV=$node_env
+ENV NODE_ENV=production
+RUN yarn
+
+FROM node:10-slim as build
+COPY package.json yarn.lock ./
 RUN yarn
 COPY src src
+COPY tsconfig.json ./
+RUN yarn build
+
+FROM node:10-slim
+WORKDIR /usr/src/app
+COPY --from=deps node_modules node_modules
+COPY --from=build build build
+ENV NODE_ENV=production
 USER node
-ENTRYPOINT ["node", "src"]
+ENTRYPOINT ["node", "build"]

@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+import { ApolloServer, gql } from 'apollo-server'
 
 const posts = [
   {
@@ -52,7 +52,19 @@ const typeDefs = gql`
 
 const resolvers = {
   Mutation: {
-    createPost: (_, { input: { body, location, title, tags } }) => {
+    createPost: (
+      _: unknown,
+      {
+        input: { body, location, tags, title },
+      }: {
+        input: {
+          body: string
+          location: string
+          tags: string[]
+          title: string
+        }
+      },
+    ) => {
       const post = {
         id: Math.random()
           .toString(36)
@@ -67,7 +79,8 @@ const resolvers = {
     },
   },
   Query: {
-    getPost: (_, { id }) => posts.find(post => post.id === id),
+    getPost: (_: unknown, { id }: { id: string }) =>
+      posts.find(post => post.id === id),
     posts: () => posts,
   },
 }

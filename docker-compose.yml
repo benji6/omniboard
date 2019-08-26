@@ -2,12 +2,8 @@ version: '3'
 services:
   api:
     build:
-      args:
-        node_env: development
       context: api
-    entrypoint:
-      - yarn
-      - start
+      dockerfile: Dockerfile.development
     links:
       - database
     ports:
