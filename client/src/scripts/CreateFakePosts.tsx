@@ -2,16 +2,19 @@ import { Button } from 'eri'
 import * as faker from 'faker'
 import * as React from 'react'
 import { useMutation } from '@apollo/react-hooks'
-import { IPost } from '../types'
 import { CREATE_POST } from '../components/pages/CreatePost'
 ;(faker as any).locale = 'en_GB'
 
 const integerBetween = (min: number, max: number): number =>
   Math.floor((max - min) * Math.random() + min)
 
-const generatePost = (): IPost => ({
+const generatePost = (): {
+  body: string
+  location: string
+  tags: string[]
+  title: string
+} => ({
   body: faker.lorem.paragraphs(),
-  id: faker.random.uuid(),
   location: faker.fake('{{address.city}}, {{address.county}}'),
   tags: [...Array(integerBetween(0, 5)).keys()].map(() => faker.lorem.word()),
   title: faker.lorem.words(),

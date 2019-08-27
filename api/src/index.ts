@@ -1,28 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server'
-
-const posts = [
-  {
-    body: 'fake body 0',
-    id: 'fake-id-0',
-    location: 'fake location 0',
-    title: 'fake title 0',
-    tags: ['foo'],
-  },
-  {
-    body: 'fake body 1',
-    id: 'fake-id-1',
-    location: 'fake location 1',
-    title: 'fake title 1',
-    tags: ['bar'],
-  },
-  {
-    body: 'fake body 2',
-    id: 'fake-id-2',
-    location: 'fake location 2',
-    title: 'fake title 2',
-    tags: ['foo', 'bar'],
-  },
-]
+import { postRepositoryPromise } from './respositories'
+import Post from './entities/Post'
 
 const typeDefs = gql`
   input CreatePostInput {
@@ -52,7 +30,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Mutation: {
-    createPost: (
+    createPost: async (
       _: unknown,
       {
         input: { body, location, tags, title },
@@ -65,23 +43,24 @@ const resolvers = {
         }
       },
     ) => {
-      const post = {
-        id: Math.random()
-          .toString(36)
-          .slice(2),
-        body,
-        location,
-        title,
-        tags,
-      }
-      posts.push(post)
-      return post
+      const post = new Post()
+      post.body = body
+      post.location = location
+      post.tags = tags
+      post.title = title
+      const postRepository = await postRepositoryPromise
+      return postRepository.save(post)
     },
   },
   Query: {
-    getPost: (_: unknown, { id }: { id: string }) =>
-      posts.find(post => post.id === id),
-    posts: () => posts,
+    getPost: async (_: unknown, { id }: { id: string }) => {
+      const postRepository = await postRepositoryPromise
+      return postRepository.findOne(id)
+    },
+    posts: async () => {
+      const postRepository = await postRepositoryPromise
+      return postRepository.find()
+    },
   },
 }
 

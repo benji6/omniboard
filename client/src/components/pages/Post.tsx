@@ -36,7 +36,7 @@ export default function Post(props: RouteComponentProps) {
       <Paper>
         {loading ? (
           <Spinner />
-        ) : error || !data ? (
+        ) : error || !data || !data.getPost ? (
           <p>Something went wrong, please try again</p>
         ) : (
           <>
