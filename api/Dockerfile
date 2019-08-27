@@ -12,6 +12,7 @@ RUN yarn build
 
 FROM node:10-slim
 WORKDIR /usr/src/app
+COPY .env .env
 COPY --from=deps node_modules node_modules
 COPY --from=build build build
 ENV NODE_ENV=production
