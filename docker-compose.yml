@@ -7,13 +7,12 @@ services:
     links:
       - database
     ports:
-      - '4000:4000'
+      - 4000:4000
     volumes:
-      - './api/src:/usr/src/app/src'
+      - ./api/src:/usr/src/app/src
   database:
-    image: 'postgres:alpine'
+    image: postgres:alpine
     environment:
       POSTGRES_DB: omniboard
-      POSTGRES_USER: postgres
     expose:
-      - '5432'
+      - 5432
