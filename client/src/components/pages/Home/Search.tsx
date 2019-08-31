@@ -98,7 +98,7 @@ export default function Search({ navigate }: { navigate: NavigateFn }) {
           value={searchTitle}
         />
       </Paper>
-      <Paper>
+      <Paper side>
         <Toggle
           checked={filtersApplied}
           label="Toggle filters"
