@@ -1,7 +1,7 @@
 import { NavigateFn } from '@reach/router'
 import { Spinner, PaperGroup, Paper, Toggle, TextField } from 'eri'
 import gql from 'graphql-tag'
-import React from 'react'
+import * as React from 'react'
 import { useDebounce } from 'use-debounce'
 import PostListItem from './PostListItem'
 import { useQuery } from '@apollo/react-hooks'

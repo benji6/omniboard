@@ -3,6 +3,7 @@ import { navigate } from '@reach/router'
 import { Dialog, ButtonGroup, Button } from 'eri'
 import * as React from 'react'
 import { useAppState } from '../AppStateContainer'
+import { userPool } from '../../cognito'
 
 interface IProps {
   onClose(): void
@@ -14,17 +15,15 @@ export default function SignOutDialog({ onClose, open }: IProps) {
   const dispatch = useAppState()[1]
   const client = useApolloClient()
 
-  const handleSignOut = async () => {
+  const handleSignOut = () => {
     setIsLoading(true)
-    try {
-      // TODO - sign out
-    } finally {
-      client.resetStore()
-      onClose()
-      setIsLoading(false)
-      dispatch({ type: 'setUserEmail' })
-      navigate('/')
-    }
+    const currentUser = userPool.getCurrentUser()
+    if (currentUser) currentUser.signOut()
+    client.resetStore()
+    onClose()
+    dispatch({ type: 'setUserEmail' })
+    setIsLoading(false)
+    navigate('/')
   }
 
   return (

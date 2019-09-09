@@ -1,6 +1,7 @@
 import { Link, NavigateFn, RouteComponentProps } from '@reach/router'
+import { CognitoUser } from 'amazon-cognito-identity-js'
 import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
-import React from 'react'
+import * as React from 'react'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import {
   emailValidator,
@@ -8,6 +9,15 @@ import {
   requiredValidator,
 } from '../../validators'
 import { networkErrorMessage } from '../../constants'
+import { userPool } from '../../cognito'
+
+const resendConfirmation = ({ email }: { email: string }) =>
+  new Promise((resolve, reject) => {
+    const cognitoUser = new CognitoUser({ Pool: userPool, Username: email })
+    cognitoUser.resendConfirmationCode((err, result) =>
+      err ? reject(err) : resolve(result),
+    )
+  })
 
 interface IFormValues {
   email: string
@@ -17,7 +27,7 @@ const initialValues = {
   email: '',
 }
 
-export default function SignUp({ navigate }: RouteComponentProps) {
+export default function ResendVerification({ navigate }: RouteComponentProps) {
   const [submitError, setSubmitError] = React.useState<string | undefined>()
 
   return (
@@ -28,10 +38,9 @@ export default function SignUp({ navigate }: RouteComponentProps) {
           initialValues={initialValues}
           onSubmit={async ({ email }, { setSubmitting }) => {
             try {
-              // TODO resend sign up
+              await resendConfirmation({ email })
               ;(navigate as NavigateFn)('/verify')
             } catch (e) {
-              console.log(e)
               switch (e.code) {
                 case 'NetworkError':
                   setSubmitError(networkErrorMessage)
@@ -48,7 +57,7 @@ export default function SignUp({ navigate }: RouteComponentProps) {
                   break
                 default:
                   setSubmitError(
-                    'Something has gone wrong, check the data you have entered and try again',
+                    'Something went wrong, check the data you have entered and try again',
                   )
               }
             } finally {

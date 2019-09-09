@@ -1,20 +1,17 @@
 import { Link, RouteComponentProps, NavigateFn } from '@reach/router'
-import { Spinner, PaperGroup, Paper } from 'eri'
-import React from 'react'
+import { PaperGroup, Paper } from 'eri'
+import * as React from 'react'
 import { useAppState } from '../../AppStateContainer'
 import Search from './Search'
 
 export default function Home({ navigate }: RouteComponentProps) {
   const [
     {
-      loading: isAppStateLoading,
       user: { email: userEmail },
     },
   ] = useAppState()
 
-  return isAppStateLoading ? (
-    <Spinner />
-  ) : userEmail ? (
+  return userEmail ? (
     <Search navigate={navigate as NavigateFn} />
   ) : (
     <PaperGroup>

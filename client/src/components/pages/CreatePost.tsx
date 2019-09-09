@@ -3,9 +3,10 @@ import { RouteComponentProps } from '@reach/router'
 import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import gql from 'graphql-tag'
-import React from 'react'
+import * as React from 'react'
 import { requiredValidator } from '../../validators'
 import { networkErrorMessage } from '../../constants'
+import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
 
 export const CREATE_POST = gql(`mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
@@ -41,6 +42,7 @@ interface IMutationVariables {
 }
 
 export default function CreatePost(_: RouteComponentProps) {
+  useRedirectUnAuthed()
   const [submitError, setSubmitError] = React.useState<string | undefined>()
   const [create] = useMutation<unknown, IMutationVariables>(CREATE_POST)
 

@@ -1,6 +1,7 @@
 import { Link, NavigateFn, RouteComponentProps } from '@reach/router'
+import { CognitoUserAttribute } from 'amazon-cognito-identity-js'
 import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
-import React from 'react'
+import * as React from 'react'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import {
   emailValidator,
@@ -9,6 +10,27 @@ import {
   requiredValidator,
 } from '../../validators'
 import { networkErrorMessage } from '../../constants'
+import { userPool } from '../../cognito'
+import useRedirectAuthed from '../../hooks/useRedirectAuthed'
+
+const signUp = ({
+  attributeList,
+  email,
+  password,
+}: {
+  attributeList: CognitoUserAttribute[]
+  email: string
+  password: string
+}) =>
+  new Promise((resolve, reject) => {
+    userPool.signUp(
+      email,
+      password,
+      attributeList,
+      null as any,
+      (err: Error | void, result) => (err ? reject(err) : resolve(result)),
+    )
+  })
 
 interface IFormValues {
   email: string
@@ -21,6 +43,7 @@ const initialValues = {
 }
 
 export default function SignUp({ navigate }: RouteComponentProps) {
+  useRedirectAuthed()
   const [submitError, setSubmitError] = React.useState<string | undefined>()
 
   return (
@@ -30,8 +53,11 @@ export default function SignUp({ navigate }: RouteComponentProps) {
         <Formik
           initialValues={initialValues}
           onSubmit={async ({ email, password }, { setSubmitting }) => {
+            const attributeList = [
+              new CognitoUserAttribute({ Name: 'email', Value: email }),
+            ]
             try {
-              // TODO sign up
+              await signUp({ attributeList, email, password })
               ;(navigate as NavigateFn)('/verify')
             } catch (e) {
               switch (e.code) {
@@ -45,7 +71,7 @@ export default function SignUp({ navigate }: RouteComponentProps) {
                   break
                 default:
                   setSubmitError(
-                    'Something has gone wrong, check the data you have entered and try again',
+                    'Something went wrong, check the data you have entered and try again',
                   )
               }
             } finally {

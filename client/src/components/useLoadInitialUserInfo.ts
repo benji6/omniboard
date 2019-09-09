@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { appStateReducer } from './AppStateContainer'
+import { getIdToken } from '../cognito'
 
 export default function useLoadInitialUserInfo(
   dispatch: React.Dispatch<React.ReducerAction<typeof appStateReducer>>,
@@ -8,10 +9,12 @@ export default function useLoadInitialUserInfo(
     let aborted = false
     ;(async function() {
       try {
-        // TODO - load user info
-        const newEmail = 'todo@email.com'
+        const {
+          payload: { email },
+        } = await getIdToken()
         if (aborted) return
-        dispatch({ type: 'setUserEmail', payload: newEmail })
+        dispatch({ type: 'setUserEmail', payload: email })
+      } catch {
       } finally {
         dispatch({ type: 'setLoading', payload: false })
       }

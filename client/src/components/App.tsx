@@ -2,8 +2,8 @@ import { ApolloProvider } from '@apollo/react-hooks'
 import { Link } from '@reach/router'
 import ApolloClient from 'apollo-boost'
 import { Header, MenuButton } from 'eri'
-import React from 'react'
-import Router from './Router'
+import * as React from 'react'
+import Main from './Main'
 import Menu from './Menu'
 import AppStateContainer from './AppStateContainer'
 
@@ -27,9 +27,7 @@ export default function App() {
           <MenuButton onClick={handleMenuOpen} />
         </Header>
         <Menu handleMenuClose={handleMenuClose} open={isMenuOpen} />
-        <main>
-          <Router />
-        </main>
+        <Main />
       </AppStateContainer>
     </ApolloProvider>
   )

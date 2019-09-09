@@ -1,8 +1,10 @@
 import { Link, RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { Paper, PaperGroup } from 'eri'
+import useRedirectAuthed from '../../hooks/useRedirectAuthed'
 
 export default function Verify(_: RouteComponentProps) {
+  useRedirectAuthed()
   return (
     <PaperGroup>
       <Paper>

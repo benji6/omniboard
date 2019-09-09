@@ -1,7 +1,12 @@
 import { RouteComponentProps, Link, NavigateFn } from '@reach/router'
+import {
+  AuthenticationDetails,
+  CognitoUser,
+  CognitoUserSession,
+} from 'amazon-cognito-identity-js'
 import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
-import React from 'react'
+import * as React from 'react'
 import {
   emailValidator,
   passwordValidator,
@@ -10,6 +15,33 @@ import {
 } from '../../validators'
 import { networkErrorMessage } from '../../constants'
 import { useAppState } from '../AppStateContainer'
+import { userPool } from '../../cognito'
+import useRedirectAuthed from '../../hooks/useRedirectAuthed'
+
+const authenticate = ({
+  email,
+  password,
+}: {
+  email: string
+  password: string
+}): Promise<CognitoUserSession> => {
+  const authenticationDetails = new AuthenticationDetails({
+    Password: password,
+    Username: email,
+  })
+
+  const cognitoUser = new CognitoUser({
+    Pool: userPool,
+    Username: email,
+  })
+
+  return new Promise((resolve, reject) => {
+    cognitoUser.authenticateUser(authenticationDetails, {
+      onFailure: reject,
+      onSuccess: resolve,
+    })
+  })
+}
 
 interface IFormValues {
   email: string
@@ -22,6 +54,7 @@ const initialValues = {
 }
 
 export default function SignIn({ navigate }: RouteComponentProps) {
+  useRedirectAuthed()
   const [submitError, setSubmitError] = React.useState<string | undefined>()
   const dispatch = useAppState()[1]
 
@@ -33,9 +66,11 @@ export default function SignIn({ navigate }: RouteComponentProps) {
           initialValues={initialValues}
           onSubmit={async ({ email, password }, { setSubmitting }) => {
             try {
-              // TODO sign in
-              // const user = await Auth.signIn(email, password)
-              dispatch({ payload: 'todo@email.com', type: 'setUserEmail' })
+              const result = await authenticate({ email, password })
+              dispatch({
+                payload: result.getIdToken().payload.email,
+                type: 'setUserEmail',
+              })
               ;(navigate as NavigateFn)('/')
             } catch (e) {
               switch (e.code) {
@@ -53,7 +88,7 @@ export default function SignIn({ navigate }: RouteComponentProps) {
                   break
                 default:
                   setSubmitError(
-                    'Something has gone wrong, check the data you have entered and try again',
+                    'Something went wrong, check the data you have entered and try again',
                   )
               }
             } finally {

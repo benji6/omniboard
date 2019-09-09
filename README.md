@@ -10,3 +10,12 @@
 To build the backend run `docker build api`
 
 You can run the built image with `docker run -d -p 127.0.0.1:4000:4000 IMAGE`
+
+## Deploying
+
+### Infrastructure
+
+```sh
+cd terraform
+terraform apply
+```

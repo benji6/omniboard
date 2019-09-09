@@ -1,4 +1,5 @@
 .env
+.terraform
 *.log
 build
 node_modules
