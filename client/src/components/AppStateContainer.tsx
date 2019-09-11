@@ -32,7 +32,9 @@ const AppStateContext = React.createContext<
 
 export const useAppState = () => React.useContext(AppStateContext)
 
-export default function AppStateContainer(props: object) {
+export default function AppStateContainer(props: {
+  children: React.ReactNode
+}) {
   const [state, dispatch] = React.useReducer(appStateReducer, initialState)
   useLoadInitialUserInfo(dispatch)
   return <AppStateContext.Provider {...props} value={[state, dispatch]} />
