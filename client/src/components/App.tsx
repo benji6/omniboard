@@ -6,8 +6,17 @@ import * as React from 'react'
 import Main from './Main'
 import Menu from './Menu'
 import AppStateContainer from './AppStateContainer'
+import { getIdToken } from '../cognito'
 
 const client = new ApolloClient({
+  request: async operation => {
+    try {
+      const idToken = await getIdToken()
+      operation.setContext({
+        headers: { Authorization: `Bearer ${idToken.getJwtToken()}` },
+      })
+    } catch {}
+  },
   uri: 'http://localhost:4000', // TODO
 })
 
