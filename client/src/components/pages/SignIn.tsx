@@ -55,7 +55,7 @@ const initialValues = {
 
 export default function SignIn({ navigate }: RouteComponentProps) {
   useRedirectAuthed()
-  const [submitError, setSubmitError] = React.useState<string | undefined>()
+  const [submitError, setSubmitError] = React.useState<React.ReactNode>()
   const dispatch = useAppState()[1]
 
   return (
@@ -79,7 +79,12 @@ export default function SignIn({ navigate }: RouteComponentProps) {
                   break
                 case 'UserNotConfirmedException':
                   setSubmitError(
-                    'Check your email to verify your email address before continuing',
+                    <>
+                      Check your email to verify your email address or{' '}
+                      <Link to="/resend-verification">
+                        resend the verification email
+                      </Link>
+                    </>,
                   )
                   break
                 case 'NotAuthorizedException':
