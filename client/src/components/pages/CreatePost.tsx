@@ -1,10 +1,16 @@
 import { useMutation } from '@apollo/react-hooks'
 import { RouteComponentProps } from '@reach/router'
-import { Button, TextField, ButtonGroup, PaperGroup, Paper } from 'eri'
+import {
+  Button,
+  TextField,
+  ButtonGroup,
+  PaperGroup,
+  Paper,
+  requiredValidator,
+} from 'eri'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import gql from 'graphql-tag'
 import * as React from 'react'
-import { requiredValidator } from '../../validators'
 import { networkErrorMessage } from '../../constants'
 import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
 
@@ -43,7 +49,7 @@ interface IMutationVariables {
 
 export default function CreatePost(_: RouteComponentProps) {
   useRedirectUnAuthed()
-  const [submitError, setSubmitError] = React.useState<string | undefined>()
+  const [submitError, setSubmitError] = React.useState<React.ReactNode>()
   const [create] = useMutation<unknown, IMutationVariables>(CREATE_POST)
 
   return (
