@@ -1,5 +1,5 @@
 import { ApolloServer, gql } from 'apollo-server'
-import { postRepositoryPromise } from './respositories'
+import { postRepositoryPromise } from './repositories'
 import Post from './entities/Post'
 
 const typeDefs = gql`
