@@ -17,6 +17,10 @@ const typeDefs = gql`
     userId: String!
   }
 
+  input GetPostsInput {
+    title: String!
+  }
+
   type Post {
     body: String!
     id: ID!
@@ -32,9 +36,19 @@ const typeDefs = gql`
 
   type Query {
     getPost(id: ID!): Post
+    getPosts(input: GetPostsInput!): [Post]
     posts: [Post]
   }
 `
+
+interface IPost {
+  body: string
+  id: number
+  location: string
+  tags: string[]
+  title: string
+  userId: string
+}
 
 interface IContext {
   user?: { id: string }
@@ -73,11 +87,21 @@ const resolvers = {
     },
   },
   Query: {
-    getPost: async (_: undefined, { id }: { id: string }) => {
+    getPost: async (
+      _: undefined,
+      { id }: { id: string },
+    ): Promise<IPost | undefined> => {
       const postRepository = await postRepositoryPromise
       return postRepository.findOne(id)
     },
-    posts: async (_: undefined, __: undefined, context: IContext) => {
+    getPosts: async (
+      _: undefined,
+      { input }: { input: { title: string } },
+    ): Promise<IPost[]> => {
+      const postRepository = await postRepositoryPromise
+      return postRepository.find({ title: input.title })
+    },
+    posts: async (): Promise<IPost[]> => {
       const postRepository = await postRepositoryPromise
       return postRepository.find()
     },
