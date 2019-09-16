@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/react-hooks'
-import { RouteComponentProps, Redirect } from '@reach/router'
+import { RouteComponentProps } from '@reach/router'
 import {
   Button,
   TextField,
