@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/react-hooks'
-import { RouteComponentProps } from '@reach/router'
+import { RouteComponentProps, Redirect } from '@reach/router'
 import {
   Button,
   TextField,
@@ -13,6 +13,7 @@ import gql from 'graphql-tag'
 import * as React from 'react'
 import { networkErrorMessage } from '../../constants'
 import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
+import { useAppState, IUser } from '../AppStateContainer'
 
 export const CREATE_POST = gql(`mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
@@ -20,6 +21,7 @@ export const CREATE_POST = gql(`mutation CreatePost($input: CreatePostInput!) {
     location
     tags
     title
+    userId
   }
 }
 `)
@@ -44,6 +46,7 @@ interface IMutationVariables {
     location: string
     tags: string[]
     title: string
+    userId: string
   }
 }
 
@@ -51,6 +54,7 @@ export default function CreatePost(_: RouteComponentProps) {
   useRedirectUnAuthed()
   const [submitError, setSubmitError] = React.useState<React.ReactNode>()
   const [create] = useMutation<unknown, IMutationVariables>(CREATE_POST)
+  const [{ user }] = useAppState()
 
   return (
     <PaperGroup>
@@ -62,7 +66,11 @@ export default function CreatePost(_: RouteComponentProps) {
             try {
               await create({
                 variables: {
-                  input: { ...values, tags: values.tags.split(' ') },
+                  input: {
+                    ...values,
+                    tags: values.tags.split(' '),
+                    userId: (user as IUser).id,
+                  },
                 },
               })
             } catch {

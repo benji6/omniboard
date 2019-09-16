@@ -3,28 +3,31 @@ import useLoadInitialUserInfo from './useLoadInitialUserInfo'
 
 interface IAction {
   payload?: any
-  type: 'setLoading' | 'setUserEmail'
+  type: 'setLoading' | 'setUser'
+}
+
+export interface IUser {
+  email: string
+  id: string
 }
 
 interface IState {
   loading: boolean
-  user: {
-    email?: string
-  }
+  user?: IUser
 }
 
 export const appStateReducer = (state: IState, { payload, type }: IAction) => {
   switch (type) {
     case 'setLoading':
       return { ...state, loading: payload }
-    case 'setUserEmail':
-      return { ...state, user: { email: payload } }
+    case 'setUser':
+      return { ...state, user: payload }
     default:
       throw Error(`Unknown action type: ${type}`)
   }
 }
 
-const initialState = { loading: true, user: { email: undefined } }
+const initialState = { loading: true }
 
 const AppStateContext = React.createContext<
   [IState, React.Dispatch<React.ReducerAction<typeof appStateReducer>>]

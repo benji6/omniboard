@@ -10,10 +10,10 @@ export default function useLoadInitialUserInfo(
     ;(async function() {
       try {
         const {
-          payload: { email },
+          payload: { email, sub },
         } = await getIdToken()
         if (aborted) return
-        dispatch({ type: 'setUserEmail', payload: email })
+        dispatch({ type: 'setUser', payload: { email, id: sub } })
       } catch {
       } finally {
         dispatch({ type: 'setLoading', payload: false })

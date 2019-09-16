@@ -3,12 +3,8 @@ import * as React from 'react'
 import { useAppState } from '../components/AppStateContainer'
 
 export default function useRedirectUnAuthed() {
-  const [
-    {
-      user: { email: userEmail },
-    },
-  ] = useAppState()
+  const [{ user }] = useAppState()
   React.useEffect(() => {
-    if (!userEmail) navigate('/')
-  }, [userEmail])
+    if (!user) navigate('/')
+  }, [user])
 }

@@ -11,11 +11,7 @@ interface IProps {
 
 export default function Menu({ handleMenuClose, open }: IProps) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false)
-  const [
-    {
-      user: { email: userEmail },
-    },
-  ] = useAppState()
+  const [{ user }] = useAppState()
 
   const handleDialogClose = () => {
     setIsDialogOpen(false)
@@ -25,12 +21,12 @@ export default function Menu({ handleMenuClose, open }: IProps) {
   return (
     <>
       <EriMenu onClose={handleMenuClose} open={open}>
-        {userEmail && (
+        {user && (
           <>
             <p>
               Signed in as:
               <br />
-              {userEmail}
+              {user.email}
             </p>
             <ButtonGroup>
               <Button
@@ -51,7 +47,7 @@ export default function Menu({ handleMenuClose, open }: IProps) {
               Home
             </Link>
           </li>
-          {userEmail ? (
+          {user ? (
             <li>
               <Link onClick={handleMenuClose} to="posts/create">
                 Create post

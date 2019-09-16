@@ -46,9 +46,10 @@ export default function SignIn({ navigate }: RouteComponentProps) {
       onSubmit={async ({ email, password, setSubmitError }) => {
         try {
           const result = await authenticate({ email, password })
+          const { payload } = result.getIdToken()
           dispatch({
-            payload: result.getIdToken().payload.email,
-            type: 'setUserEmail',
+            payload: { email: payload.email, id: payload.sub },
+            type: 'setUser',
           })
           ;(navigate as NavigateFn)('/')
         } catch (e) {

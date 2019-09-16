@@ -21,7 +21,7 @@ export default function SignOutDialog({ onClose, open }: IProps) {
     if (currentUser) currentUser.signOut()
     client.resetStore()
     onClose()
-    dispatch({ type: 'setUserEmail' })
+    dispatch({ type: 'setUser' })
     setIsLoading(false)
     navigate('/')
   }

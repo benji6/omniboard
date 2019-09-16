@@ -16,4 +16,7 @@ export default class Post {
 
   @Column('text')
   title!: string
+
+  @Column('text')
+  userId!: string
 }

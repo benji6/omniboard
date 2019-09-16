@@ -5,13 +5,9 @@ import { useAppState } from '../../AppStateContainer'
 import Search from './Search'
 
 export default function Home({ navigate }: RouteComponentProps) {
-  const [
-    {
-      user: { email: userEmail },
-    },
-  ] = useAppState()
+  const [{ user }] = useAppState()
 
-  return userEmail ? (
+  return user ? (
     <Search navigate={navigate as NavigateFn} />
   ) : (
     <PaperGroup>
