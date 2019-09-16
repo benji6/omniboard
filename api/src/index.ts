@@ -4,6 +4,7 @@ import {
   ForbiddenError,
   gql,
 } from 'apollo-server'
+import { Like } from 'typeorm'
 import { postRepositoryPromise } from './repositories'
 import Post from './entities/Post'
 import { validateToken } from './cognito'
@@ -99,7 +100,7 @@ const resolvers = {
       { input }: { input: { title: string } },
     ): Promise<IPost[]> => {
       const postRepository = await postRepositoryPromise
-      return postRepository.find({ title: input.title })
+      return postRepository.find({ title: Like(`%${input.title}%`) })
     },
     posts: async (): Promise<IPost[]> => {
       const postRepository = await postRepositoryPromise
