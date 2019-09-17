@@ -22,30 +22,39 @@ export default {
   },
   async search({
     body,
+    location,
     title,
   }: {
     body?: string
+    location?: string
     title?: string
   }): Promise<IPost[]> {
     let result
-    if (!title && !body)
+    if (!body && !location && !title)
       result = await pool.query(`SELECT ${COLUMNS} FROM ${TABLE_NAME}`)
     else {
-      if (!body)
-        result = await pool.query(
-          `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE title ILIKE $1`,
-          [`%${title}%`],
-        )
-      else if (!title)
-        result = await pool.query(
-          `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE body ILIKE $1`,
-          [`%${body}%`],
-        )
-      else
-        result = await pool.query(
-          `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE body ILIKE $1 AND title ILIKE $2`,
-          [`%${body}%`, `%${title}%`],
-        )
+      let whereClause = 'WHERE'
+      let queryArgs = []
+      if (body) {
+        whereClause += ` body ILIKE $${queryArgs.length + 1}`
+        queryArgs.push(`%${body}%`)
+      }
+      if (location) {
+        whereClause += ` ${
+          queryArgs.length ? 'AND ' : ''
+        }location ILIKE $${queryArgs.length + 1}`
+        queryArgs.push(`%${location}%`)
+      }
+      if (title) {
+        whereClause += ` ${
+          queryArgs.length ? 'AND ' : ''
+        }title ILIKE $${queryArgs.length + 1}`
+        queryArgs.push(`%${title}%`)
+      }
+      result = await pool.query(
+        `SELECT ${COLUMNS} FROM ${TABLE_NAME} ${whereClause}`,
+        queryArgs,
+      )
     }
 
     return result.rows || []

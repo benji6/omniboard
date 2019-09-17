@@ -18,6 +18,7 @@ const typeDefs = gql`
 
   input SearchPostsInput {
     body: String
+    location: String
     title: String
   }
 
@@ -70,8 +71,10 @@ const resolvers = {
     ): Promise<IPost | undefined> => postRepository.getById(id),
     searchPosts: async (
       _: undefined,
-      { input: { body, title } }: { input: { body?: string; title?: string } },
-    ): Promise<IPost[]> => postRepository.search({ body, title }),
+      {
+        input,
+      }: { input: { body?: string; location?: string; title?: string } },
+    ): Promise<IPost[]> => postRepository.search(input),
   },
 }
 

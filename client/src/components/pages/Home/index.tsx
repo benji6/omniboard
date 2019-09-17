@@ -7,7 +7,7 @@ import { useDebounce } from 'use-debounce'
 import PostListItem from './PostListItem'
 import { IPost } from '../../../types'
 
-export const GET_POSTS = gql`
+export const SEARCH_POSTS = gql`
   query SearchPosts($input: SearchPostsInput!) {
     searchPosts(input: $input) {
       body
@@ -19,6 +19,12 @@ export const GET_POSTS = gql`
   }
 `
 
+interface ISearchPostsInput {
+  body?: string
+  location?: string
+  title?: string
+}
+
 interface IQueryResult {
   searchPosts: IPost[]
 }
@@ -29,12 +35,12 @@ const initialSearchParams = new URLSearchParams(location.search) // eslint-disab
 const initialSearchBody = initialSearchParams.get('body') || ''
 const initialSearchLocation = initialSearchParams.get('location') || ''
 const initialSearchTitle = initialSearchParams.get('title') || ''
-const initialSearchType = initialSearchParams.get('type') || ''
+const initialSearchTags = initialSearchParams.get('tags') || ''
 
 const initialFilterValues = [
   initialSearchBody,
   initialSearchLocation,
-  initialSearchType,
+  initialSearchTags,
 ]
 
 export default function Home({ navigate }: RouteComponentProps) {
@@ -46,11 +52,11 @@ export default function Home({ navigate }: RouteComponentProps) {
     initialSearchLocation,
   )
   const [searchTitle, setSearchTitle] = React.useState(initialSearchTitle)
-  const [searchType, setSearchType] = React.useState(initialSearchType)
+  const [searchTags, setSearchTags] = React.useState(initialSearchTags)
 
   const [debouncedSearchBody] = useDebounce(searchBody, DEBOUNCE_TIME)
   const [debouncedSearchTitle] = useDebounce(searchTitle, DEBOUNCE_TIME)
-  const [debouncedSearchType] = useDebounce(searchType, DEBOUNCE_TIME)
+  const [debouncedSearchTags] = useDebounce(searchTags, DEBOUNCE_TIME)
   const [debouncedSearchLocation] = useDebounce(searchLocation, DEBOUNCE_TIME)
 
   React.useEffect(() => {
@@ -59,7 +65,7 @@ export default function Home({ navigate }: RouteComponentProps) {
       if (debouncedSearchBody) searchParams.set('body', debouncedSearchBody)
       if (debouncedSearchLocation)
         searchParams.set('location', debouncedSearchLocation)
-      if (debouncedSearchType) searchParams.set('type', debouncedSearchType)
+      if (debouncedSearchTags) searchParams.set('tags', debouncedSearchTags)
     }
     if (debouncedSearchTitle) searchParams.set('title', debouncedSearchTitle)
     ;(navigate as NavigateFn)(
@@ -72,17 +78,21 @@ export default function Home({ navigate }: RouteComponentProps) {
     debouncedSearchBody,
     debouncedSearchLocation,
     debouncedSearchTitle,
-    debouncedSearchType,
+    debouncedSearchTags,
     filtersApplied,
   ] /* eslint-enable react-hooks/exhaustive-deps */)
 
-  const { data, error, loading } = useQuery<IQueryResult>(GET_POSTS, {
-    variables: {
-      input: {
-        body: filtersApplied ? debouncedSearchBody : undefined,
-        title: debouncedSearchTitle,
-      },
-    },
+  let searchPostsInput: ISearchPostsInput = {}
+
+  if (debouncedSearchTitle) searchPostsInput.title = debouncedSearchTitle
+  if (filtersApplied) {
+    if (debouncedSearchBody) searchPostsInput.body = debouncedSearchBody
+    if (debouncedSearchLocation)
+      searchPostsInput.location = debouncedSearchLocation
+  }
+
+  const { data, error, loading } = useQuery<IQueryResult>(SEARCH_POSTS, {
+    variables: { input: searchPostsInput },
   })
 
   return (
@@ -110,14 +120,14 @@ export default function Home({ navigate }: RouteComponentProps) {
               value={searchBody}
             />
             <TextField
-              label="Type"
-              onChange={e => setSearchType(e.target.value)}
-              value={searchType}
-            />
-            <TextField
               label="Location"
               onChange={e => setSearchLocation(e.target.value)}
               value={searchLocation}
+            />
+            <TextField
+              label="Tags"
+              onChange={e => setSearchTags(e.target.value)}
+              value={searchTags}
             />
           </>
         )}
