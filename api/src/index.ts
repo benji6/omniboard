@@ -4,10 +4,8 @@ import {
   ForbiddenError,
   gql,
 } from 'apollo-server'
-import { Like } from 'typeorm'
-import { postRepositoryPromise } from './repositories'
-import Post from './entities/Post'
 import { validateToken } from './cognito'
+import postRepository, { IPost } from './repositories/postRepository'
 
 const typeDefs = gql`
   input CreatePostInput {
@@ -42,15 +40,6 @@ const typeDefs = gql`
   }
 `
 
-interface IPost {
-  body: string
-  id: number
-  location: string
-  tags: string[]
-  title: string
-  userId: string
-}
-
 interface IContext {
   user?: { id: string }
 }
@@ -60,52 +49,30 @@ const resolvers = {
     createPost: async (
       _: unknown,
       {
-        input: { body, location, tags, title, userId },
+        input,
       }: {
-        input: {
-          body: string
-          location: string
-          tags: string[]
-          title: string
-          userId: string
-        }
+        input: Omit<IPost, 'id'>
       },
       context: IContext,
     ) => {
       if (!context.user) throw new AuthenticationError('Must sign in')
-      if (context.user.id !== userId)
+      if (context.user.id !== input.userId)
         throw new ForbiddenError(
-          `Authenticated user id ${context.user.id} does not match post user id ${userId}`,
+          `Authenticated user id ${context.user.id} does not match post user id ${input.userId}`,
         )
-      const post = new Post()
-      post.body = body
-      post.location = location
-      post.tags = tags
-      post.title = title
-      post.userId = userId
-      const postRepository = await postRepositoryPromise
-      return postRepository.save(post)
+      return postRepository.create(input)
     },
   },
   Query: {
     getPost: async (
       _: undefined,
-      { id }: { id: string },
-    ): Promise<IPost | undefined> => {
-      const postRepository = await postRepositoryPromise
-      return postRepository.findOne(id)
-    },
+      { id }: { id: number },
+    ): Promise<IPost | undefined> => postRepository.getById(id),
     getPosts: async (
       _: undefined,
       { input }: { input: { title: string } },
-    ): Promise<IPost[]> => {
-      const postRepository = await postRepositoryPromise
-      return postRepository.find({ title: Like(`%${input.title}%`) })
-    },
-    posts: async (): Promise<IPost[]> => {
-      const postRepository = await postRepositoryPromise
-      return postRepository.find()
-    },
+    ): Promise<IPost[]> => postRepository.find({ title: input.title }),
+    posts: (): Promise<IPost[]> => postRepository.list(),
   },
 }
 
