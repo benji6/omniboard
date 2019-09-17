@@ -76,18 +76,13 @@ export default function Home({ navigate }: RouteComponentProps) {
     filtersApplied,
   ] /* eslint-enable react-hooks/exhaustive-deps */)
 
-  let filter: any = {} // TODO
-
-  if (filtersApplied) {
-    if (debouncedSearchLocation)
-      filter.location = { match: debouncedSearchLocation }
-    if (debouncedSearchBody) filter.body = { matchPhrase: debouncedSearchBody }
-    if (debouncedSearchType) filter.type = { match: debouncedSearchType }
-  }
-  if (debouncedSearchTitle) filter.title = { match: debouncedSearchTitle }
-
   const { data, error, loading } = useQuery<IQueryResult>(GET_POSTS, {
-    variables: { input: { title: debouncedSearchTitle } },
+    variables: {
+      input: {
+        body: filtersApplied ? debouncedSearchBody : undefined,
+        title: debouncedSearchTitle,
+      },
+    },
   })
 
   return (
