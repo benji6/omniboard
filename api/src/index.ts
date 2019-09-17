@@ -16,8 +16,8 @@ const typeDefs = gql`
     userId: String!
   }
 
-  input GetPostsInput {
-    title: String!
+  input SearchPostsInput {
+    title: String
   }
 
   type Post {
@@ -35,8 +35,7 @@ const typeDefs = gql`
 
   type Query {
     getPost(id: ID!): Post
-    getPosts(input: GetPostsInput!): [Post]
-    posts: [Post]
+    searchPosts(input: SearchPostsInput!): [Post]
   }
 `
 
@@ -68,11 +67,10 @@ const resolvers = {
       _: undefined,
       { id }: { id: number },
     ): Promise<IPost | undefined> => postRepository.getById(id),
-    getPosts: async (
+    searchPosts: async (
       _: undefined,
-      { input }: { input: { title: string } },
+      { input }: { input: { title?: string } },
     ): Promise<IPost[]> => postRepository.find({ title: input.title }),
-    posts: (): Promise<IPost[]> => postRepository.list(),
   },
 }
 

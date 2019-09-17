@@ -7,9 +7,9 @@ import { useDebounce } from 'use-debounce'
 import PostListItem from './PostListItem'
 import { IPost } from '../../../types'
 
-const GET_POSTS = gql`
-  {
-    posts {
+export const GET_POSTS = gql`
+  query SearchPosts($input: SearchPostsInput!) {
+    searchPosts(input: $input) {
       body
       id
       location
@@ -20,16 +20,16 @@ const GET_POSTS = gql`
 `
 
 interface IQueryResult {
-  posts: IPost[]
+  searchPosts: IPost[]
 }
 
 const DEBOUNCE_TIME = 300
 
 const initialSearchParams = new URLSearchParams(location.search) // eslint-disable-line no-restricted-globals
-const initialSearchBody = initialSearchParams.get('searchBody') || ''
-const initialSearchLocation = initialSearchParams.get('searchLocation') || ''
-const initialSearchTitle = initialSearchParams.get('searchTitle') || ''
-const initialSearchType = initialSearchParams.get('searchType') || ''
+const initialSearchBody = initialSearchParams.get('body') || ''
+const initialSearchLocation = initialSearchParams.get('location') || ''
+const initialSearchTitle = initialSearchParams.get('title') || ''
+const initialSearchType = initialSearchParams.get('type') || ''
 
 const initialFilterValues = [
   initialSearchBody,
@@ -56,15 +56,12 @@ export default function Home({ navigate }: RouteComponentProps) {
   React.useEffect(() => {
     const searchParams = new URLSearchParams()
     if (filtersApplied) {
-      if (debouncedSearchBody)
-        searchParams.set('debouncedSearchBody', debouncedSearchBody)
+      if (debouncedSearchBody) searchParams.set('body', debouncedSearchBody)
       if (debouncedSearchLocation)
-        searchParams.set('debouncedSearchLocation', debouncedSearchLocation)
-      if (debouncedSearchType)
-        searchParams.set('debouncedSearchType', debouncedSearchType)
+        searchParams.set('location', debouncedSearchLocation)
+      if (debouncedSearchType) searchParams.set('type', debouncedSearchType)
     }
-    if (debouncedSearchTitle)
-      searchParams.set('debouncedSearchTitle', debouncedSearchTitle)
+    if (debouncedSearchTitle) searchParams.set('title', debouncedSearchTitle)
     ;(navigate as NavigateFn)(
       `/${[...searchParams].length ? '?' + searchParams : ''}`,
       {
@@ -89,7 +86,9 @@ export default function Home({ navigate }: RouteComponentProps) {
   }
   if (debouncedSearchTitle) filter.title = { match: debouncedSearchTitle }
 
-  const { data, error, loading } = useQuery<IQueryResult>(GET_POSTS)
+  const { data, error, loading } = useQuery<IQueryResult>(GET_POSTS, {
+    variables: { input: { title: debouncedSearchTitle } },
+  })
 
   return (
     <PaperGroup>
@@ -132,12 +131,12 @@ export default function Home({ navigate }: RouteComponentProps) {
         <Spinner />
       ) : error || !data ? (
         <p>Something went wrong, please try again</p>
-      ) : !data.posts.length ? (
+      ) : !data.searchPosts.length ? (
         <Paper>
           <p e-util="center">No results found</p>
         </Paper>
       ) : (
-        data.posts.map((post: IPost) => (
+        data.searchPosts.map((post: IPost) => (
           <PostListItem
             key={post.id}
             onClick={() => (navigate as NavigateFn)(`/posts/${post.id}`)}

@@ -10,12 +10,6 @@ export interface IPost {
 }
 
 export default {
-  async list(): Promise<IPost[]> {
-    const result = await pool.query(
-      'SELECT body, id, location, tags, title, user_id AS "userId" FROM posts',
-    )
-    return result.rows || []
-  },
   async create(post: Omit<IPost, 'id'>): Promise<IPost> {
     const result = await pool.query(
       'INSERT INTO posts (body, location, tags, title, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING body, id, location, tags, title, user_id AS "userId"',
@@ -23,11 +17,17 @@ export default {
     )
     return result.rows && result.rows[0]
   },
-  async find({ title }: { title: string }): Promise<IPost[]> {
-    const result = await pool.query(
-      'SELECT body, id, location, tags, title, user_id AS "userId" FROM posts WHERE title ILIKE $1',
-      [`%${title}%`],
-    )
+  async find({ title }: { title?: string }): Promise<IPost[]> {
+    let result
+    if (title)
+      result = await pool.query(
+        'SELECT body, id, location, tags, title, user_id AS "userId" FROM posts WHERE title ILIKE $1',
+        [`%${title}%`],
+      )
+    else
+      result = await pool.query(
+        'SELECT body, id, location, tags, title, user_id AS "userId" FROM posts',
+      )
     return result.rows || []
   },
   async getById(id: number): Promise<IPost | undefined> {
