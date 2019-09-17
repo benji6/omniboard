@@ -13,7 +13,6 @@ export const SEARCH_POSTS = gql`
       body
       id
       location
-      tags
       title
     }
   }
@@ -35,13 +34,8 @@ const initialSearchParams = new URLSearchParams(location.search) // eslint-disab
 const initialSearchBody = initialSearchParams.get('body') || ''
 const initialSearchLocation = initialSearchParams.get('location') || ''
 const initialSearchTitle = initialSearchParams.get('title') || ''
-const initialSearchTags = initialSearchParams.get('tags') || ''
 
-const initialFilterValues = [
-  initialSearchBody,
-  initialSearchLocation,
-  initialSearchTags,
-]
+const initialFilterValues = [initialSearchBody, initialSearchLocation]
 
 export default function Home({ navigate }: RouteComponentProps) {
   const [filtersApplied, setFiltersApplied] = React.useState(
@@ -52,11 +46,9 @@ export default function Home({ navigate }: RouteComponentProps) {
     initialSearchLocation,
   )
   const [searchTitle, setSearchTitle] = React.useState(initialSearchTitle)
-  const [searchTags, setSearchTags] = React.useState(initialSearchTags)
 
   const [debouncedSearchBody] = useDebounce(searchBody, DEBOUNCE_TIME)
   const [debouncedSearchTitle] = useDebounce(searchTitle, DEBOUNCE_TIME)
-  const [debouncedSearchTags] = useDebounce(searchTags, DEBOUNCE_TIME)
   const [debouncedSearchLocation] = useDebounce(searchLocation, DEBOUNCE_TIME)
 
   React.useEffect(() => {
@@ -65,7 +57,6 @@ export default function Home({ navigate }: RouteComponentProps) {
       if (debouncedSearchBody) searchParams.set('body', debouncedSearchBody)
       if (debouncedSearchLocation)
         searchParams.set('location', debouncedSearchLocation)
-      if (debouncedSearchTags) searchParams.set('tags', debouncedSearchTags)
     }
     if (debouncedSearchTitle) searchParams.set('title', debouncedSearchTitle)
     ;(navigate as NavigateFn)(
@@ -78,7 +69,6 @@ export default function Home({ navigate }: RouteComponentProps) {
     debouncedSearchBody,
     debouncedSearchLocation,
     debouncedSearchTitle,
-    debouncedSearchTags,
     filtersApplied,
   ] /* eslint-enable react-hooks/exhaustive-deps */)
 
@@ -123,11 +113,6 @@ export default function Home({ navigate }: RouteComponentProps) {
               label="Location"
               onChange={e => setSearchLocation(e.target.value)}
               value={searchLocation}
-            />
-            <TextField
-              label="Tags"
-              onChange={e => setSearchTags(e.target.value)}
-              value={searchTags}
             />
           </>
         )}

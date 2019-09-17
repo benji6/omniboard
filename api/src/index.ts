@@ -12,7 +12,6 @@ const typeDefs = gql`
     body: String!
     location: String!
     title: String!
-    tags: [String]!
     userId: String!
   }
 
@@ -27,7 +26,6 @@ const typeDefs = gql`
     id: ID!
     location: String!
     title: String!
-    tags: [String]!
     userId: String!
   }
 

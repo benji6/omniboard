@@ -11,7 +11,6 @@ const GET_POST = gql(`query GetPost($id: ID!) {
     body
     id
     location
-    tags
     title
   }
 }

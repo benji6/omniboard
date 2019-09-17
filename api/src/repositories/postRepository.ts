@@ -4,19 +4,18 @@ export interface IPost {
   body: string
   id: number
   location: string
-  tags: string[]
   title: string
   userId: string
 }
 
-const COLUMNS = 'body, id, location, tags, title, user_id AS "userId"'
+const COLUMNS = 'body, id, location, title, user_id AS "userId"'
 const TABLE_NAME = 'posts'
 
 export default {
   async create(post: Omit<IPost, 'id'>): Promise<IPost> {
     const result = await pool.query(
-      `INSERT INTO ${TABLE_NAME} (body, location, tags, title, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING ${COLUMNS}`,
-      [post.body, post.location, post.tags, post.title, post.userId],
+      `INSERT INTO ${TABLE_NAME} (body, location, title, user_id) VALUES ($1, $2, $3, $4) RETURNING ${COLUMNS}`,
+      [post.body, post.location, post.title, post.userId],
     )
     return result.rows && result.rows[0]
   },

@@ -19,7 +19,6 @@ export const CREATE_POST = gql(`mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
     body
     location
-    tags
     title
     userId
   }
@@ -29,14 +28,12 @@ export const CREATE_POST = gql(`mutation CreatePost($input: CreatePostInput!) {
 interface IFormValues {
   body: string
   location: string
-  tags: string
   title: string
 }
 
 const initialValues = {
   body: '',
   location: '',
-  tags: '',
   title: '',
 }
 
@@ -44,7 +41,6 @@ interface IMutationVariables {
   input: {
     body: string
     location: string
-    tags: string[]
     title: string
     userId: string
   }
@@ -68,7 +64,6 @@ export default function CreatePost(_: RouteComponentProps) {
                 variables: {
                   input: {
                     ...values,
-                    tags: values.tags.split(' '),
                     userId: (user as IUser).id,
                   },
                 },
@@ -105,17 +100,6 @@ export default function CreatePost(_: RouteComponentProps) {
                       form.errors.location
                     }
                     label="Location"
-                  />
-                )}
-              </Field>
-              <Field name="tags" validate={requiredValidator}>
-                {({ field, form }: FieldProps<IFormValues>) => (
-                  <TextField
-                    {...field}
-                    error={
-                      form.submitCount && form.touched.tags && form.errors.tags
-                    }
-                    label="Tags"
                   />
                 )}
               </Field>

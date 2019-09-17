@@ -14,13 +14,11 @@ const generatePost = (
 ): {
   body: string
   location: string
-  tags: string[]
   title: string
   userId: string
 } => ({
   body: faker.lorem.paragraphs(),
   location: faker.fake('{{address.city}}, {{address.county}}'),
-  tags: [...Array(integerBetween(0, 5)).keys()].map(() => faker.lorem.word()),
   title: faker.lorem.words(),
   userId,
 })
