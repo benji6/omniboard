@@ -21,7 +21,7 @@ const resolvers = {
         input: Omit<IPost, 'id'>
       },
       context: IContext,
-    ) => {
+    ): Promise<IPost> => {
       if (!context.user) throw new AuthenticationError('Must sign in')
       if (context.user.id !== input.userId)
         throw new ForbiddenError(
@@ -29,12 +29,32 @@ const resolvers = {
         )
       return postRepository.create(input)
     },
+    updatePost: async (
+      _: unknown,
+      {
+        input,
+      }: {
+        input: IPost
+      },
+      context: IContext,
+    ): Promise<IPost> => {
+      if (!context.user) throw new AuthenticationError('Must sign in')
+      if (context.user.id !== input.userId)
+        throw new ForbiddenError(
+          `Authenticated user id ${context.user.id} does not match post user id ${input.userId}`,
+        )
+      return postRepository.update(input)
+    },
   },
   Query: {
     getPost: async (
       _: undefined,
       { id }: { id: number },
     ): Promise<IPost | undefined> => postRepository.getById(id),
+    getPostsByUserId: async (
+      _: undefined,
+      { userId }: { userId: string },
+    ): Promise<IPost[]> => postRepository.getByUserId(userId),
     searchPosts: async (
       _: undefined,
       {

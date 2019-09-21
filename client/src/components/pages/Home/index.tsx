@@ -7,7 +7,7 @@ import { useDebounce } from 'use-debounce'
 import PostListItem from './PostListItem'
 import { IPost } from '../../../types'
 
-export const SEARCH_POSTS = gql`
+const SEARCH_POSTS = gql`
   query SearchPosts($input: SearchPostsInput!) {
     searchPosts(input: $input) {
       body

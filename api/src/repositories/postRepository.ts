@@ -19,6 +19,20 @@ export default {
     )
     return result.rows && result.rows[0]
   },
+  async getById(id: number): Promise<IPost | undefined> {
+    const result = await pool.query(
+      `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE id = $1`,
+      [id],
+    )
+    return result.rows && result.rows[0]
+  },
+  async getByUserId(userId: string): Promise<IPost[]> {
+    const result = await pool.query(
+      `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE user_id = $1`,
+      [userId],
+    )
+    return result.rows || []
+  },
   async search({
     body,
     location,
@@ -55,13 +69,12 @@ export default {
         queryArgs,
       )
     }
-
     return result.rows || []
   },
-  async getById(id: number): Promise<IPost | undefined> {
+  async update(post: IPost): Promise<IPost> {
     const result = await pool.query(
-      `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE id = $1`,
-      [id],
+      `UPDATE ${TABLE_NAME} SET (body, location, title, user_id) = ($1, $2, $3, $4) WHERE id = $5 RETURNING ${COLUMNS}`,
+      [post.body, post.location, post.title, post.userId, post.id],
     )
     return result.rows && result.rows[0]
   },
