@@ -2,42 +2,10 @@ import {
   ApolloServer,
   AuthenticationError,
   ForbiddenError,
-  gql,
 } from 'apollo-server'
 import { validateToken } from './cognito'
 import postRepository, { IPost } from './repositories/postRepository'
-
-const typeDefs = gql`
-  input CreatePostInput {
-    body: String!
-    location: String!
-    title: String!
-    userId: String!
-  }
-
-  input SearchPostsInput {
-    body: String
-    location: String
-    title: String
-  }
-
-  type Post {
-    body: String!
-    id: ID!
-    location: String!
-    title: String!
-    userId: String!
-  }
-
-  type Mutation {
-    createPost(input: CreatePostInput!): Post
-  }
-
-  type Query {
-    getPost(id: ID!): Post
-    searchPosts(input: SearchPostsInput!): [Post]
-  }
-`
+import typeDefs from './typeDefs'
 
 interface IContext {
   user?: { id: string }
