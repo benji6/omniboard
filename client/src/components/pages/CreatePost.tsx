@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/react-hooks'
-import { RouteComponentProps } from '@reach/router'
+import { RouteComponentProps, NavigateFn } from '@reach/router'
 import {
   Button,
   TextField,
@@ -46,7 +46,7 @@ interface IMutationVariables {
   }
 }
 
-export default function CreatePost(_: RouteComponentProps) {
+export default function CreatePost({ navigate }: RouteComponentProps) {
   useRedirectUnAuthed()
   const [submitError, setSubmitError] = React.useState<React.ReactNode>()
   const [create] = useMutation<unknown, IMutationVariables>(CREATE_POST)
@@ -68,10 +68,10 @@ export default function CreatePost(_: RouteComponentProps) {
                   },
                 },
               })
+              ;(navigate as NavigateFn)('/my-posts')
             } catch {
-              setSubmitError(networkErrorMessage)
-            } finally {
               setSubmitting(false)
+              setSubmitError(networkErrorMessage)
             }
           }}
         >

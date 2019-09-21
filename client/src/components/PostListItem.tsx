@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Paper } from 'eri'
-import { keysToIgnore } from '../Post'
-import { IPost } from '../../../types'
+import { keysToIgnore } from './pages/Post'
+import { IPost } from '../types'
 
 interface IProps {
   onClick(): void

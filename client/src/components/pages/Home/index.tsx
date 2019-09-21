@@ -4,7 +4,7 @@ import { Spinner, PaperGroup, Paper, Toggle, TextField } from 'eri'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { useDebounce } from 'use-debounce'
-import PostListItem from './PostListItem'
+import PostListItem from '../../PostListItem'
 import { IPost } from '../../../types'
 
 const SEARCH_POSTS = gql`
@@ -118,7 +118,9 @@ export default function Home({ navigate }: RouteComponentProps) {
         )}
       </Paper>
       {loading ? (
-        <Spinner />
+        <Paper>
+          <Spinner />
+        </Paper>
       ) : error || !data ? (
         <p>Something went wrong, please try again</p>
       ) : !data.searchPosts.length ? (

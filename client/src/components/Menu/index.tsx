@@ -48,11 +48,18 @@ export default function Menu({ handleMenuClose, open }: IProps) {
             </Link>
           </li>
           {user ? (
-            <li>
-              <Link onClick={handleMenuClose} to="posts/create">
-                Create post
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link onClick={handleMenuClose} to="my-posts">
+                  My posts
+                </Link>
+              </li>
+              <li>
+                <Link onClick={handleMenuClose} to="posts/create">
+                  Create post
+                </Link>
+              </li>
+            </>
           ) : (
             <>
               <li>
