@@ -14,10 +14,14 @@ import * as React from 'react'
 import { networkErrorMessage } from '../../constants'
 import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
 import { useAppState, IUser } from '../AppStateContainer'
+import { IPost } from '../../types'
+import { GET_POSTS_BY_USER_ID } from './MyPosts'
 
-export const CREATE_POST = gql(`mutation CreatePost($input: CreatePostInput!) {
+export const CREATE_POST = gql(`
+mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
     body
+    id
     location
     title
     userId
@@ -46,11 +50,42 @@ interface IMutationVariables {
   }
 }
 
+interface IMutationResult {
+  createPost: IPost & { __typename: 'Post' }
+}
+
 export default function CreatePost({ navigate }: RouteComponentProps) {
   useRedirectUnAuthed()
   const [submitError, setSubmitError] = React.useState<React.ReactNode>()
-  const [create] = useMutation<unknown, IMutationVariables>(CREATE_POST)
   const [{ user }] = useAppState()
+  const userId = (user as IUser).id
+  const [createPost] = useMutation<IMutationResult, IMutationVariables>(
+    CREATE_POST,
+    {
+      update(proxy, { data }) {
+        if (!data) return
+        let cachedData
+        try {
+          cachedData = proxy.readQuery<{
+            getPostsByUserId?: IPost[]
+          }>({
+            query: GET_POSTS_BY_USER_ID,
+            variables: { userId },
+          })
+        } catch {
+          return
+        }
+        if (!cachedData || !cachedData.getPostsByUserId) return
+        proxy.writeQuery({
+          query: GET_POSTS_BY_USER_ID,
+          variables: { userId },
+          data: {
+            getPostsByUserId: [data.createPost, ...cachedData.getPostsByUserId],
+          },
+        })
+      },
+    },
+  )
 
   return (
     <PaperGroup>
@@ -58,13 +93,27 @@ export default function CreatePost({ navigate }: RouteComponentProps) {
         <h2>Create post</h2>
         <Formik
           initialValues={initialValues}
-          onSubmit={async (values, { setSubmitting }) => {
+          onSubmit={async ({ body, location, title }, { setSubmitting }) => {
             try {
-              await create({
+              createPost({
+                optimisticResponse: {
+                  createPost: {
+                    __typename: 'Post',
+                    body,
+                    id: String(
+                      Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+                    ),
+                    location,
+                    title,
+                    userId,
+                  },
+                },
                 variables: {
                   input: {
-                    ...values,
-                    userId: (user as IUser).id,
+                    body,
+                    location,
+                    title,
+                    userId,
                   },
                 },
               })
@@ -120,7 +169,7 @@ export default function CreatePost({ navigate }: RouteComponentProps) {
                 </p>
               )}
               <ButtonGroup>
-                <Button disabled={isSubmitting}>Submit</Button>
+                <Button disabled={isSubmitting}>Create</Button>
               </ButtonGroup>
             </Form>
           )}

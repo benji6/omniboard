@@ -3,4 +3,5 @@ export interface IPost {
   id: string
   location: string
   title: string
+  userId: string
 }

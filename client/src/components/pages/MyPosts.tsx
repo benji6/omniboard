@@ -12,7 +12,7 @@ interface IQueryResult {
   getPostsByUserId: IPost[]
 }
 
-const GET_POSTS_BY_USER_ID = gql`
+export const GET_POSTS_BY_USER_ID = gql`
   query GetPostsByUserId($userId: ID!) {
     getPostsByUserId(userId: $userId) {
       body
