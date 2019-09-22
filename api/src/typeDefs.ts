@@ -32,6 +32,7 @@ export default gql`
 
   type Mutation {
     createPost(input: CreatePostInput!): Post!
+    deletePost(id: ID!): ID!
     updatePost(input: UpdatePostInput!): Post!
   }
 

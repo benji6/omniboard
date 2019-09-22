@@ -20,7 +20,14 @@ export default {
     )
     return result.rows && result.rows[0]
   },
-  async getById(id: number): Promise<IPost | undefined> {
+  async delete(id: number): Promise<IPost[]> {
+    const result = await pool.query(
+      `DELETE FROM ${TABLE_NAME} WHERE id = $1 RETURNING ${COLUMNS}`,
+      [id],
+    )
+    return result.rows && result.rows[0]
+  },
+  async get(id: number): Promise<IPost | undefined> {
     const result = await pool.query(
       `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE id = $1`,
       [id],

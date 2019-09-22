@@ -2,6 +2,7 @@ import {
   ApolloServer,
   AuthenticationError,
   ForbiddenError,
+  UserInputError,
 } from 'apollo-server'
 import { validateToken } from './cognito'
 import postRepository, { IPost } from './repositories/postRepository'
@@ -29,6 +30,26 @@ const resolvers = {
         )
       return postRepository.create(input)
     },
+    deletePost: async (
+      _: unknown,
+      {
+        id,
+      }: {
+        id: number
+      },
+      context: IContext,
+    ): Promise<number> => {
+      if (!context.user) throw new AuthenticationError('Must sign in')
+      const post = await postRepository.get(id)
+      if (!post) throw new UserInputError('Post does not exist')
+      if (context.user.id !== post.userId)
+        throw new ForbiddenError(
+          `Authenticated user id ${context.user.id} does not match post user id ${post.userId}`,
+        )
+      const deletedPosts = await postRepository.delete(id)
+      if (!deletedPosts.length) throw Error(`Failed to delete post id ${id}`)
+      return deletedPosts[0].id
+    },
     updatePost: async (
       _: unknown,
       {
@@ -50,7 +71,7 @@ const resolvers = {
     getPost: async (
       _: undefined,
       { id }: { id: number },
-    ): Promise<IPost | undefined> => postRepository.getById(id),
+    ): Promise<IPost | undefined> => postRepository.get(id),
     getPostsByUserId: async (
       _: undefined,
       { userId }: { userId: string },
