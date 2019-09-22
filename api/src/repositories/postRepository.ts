@@ -10,6 +10,7 @@ export interface IPost {
 
 const COLUMNS = 'body, id, location, title, user_id AS "userId"'
 const TABLE_NAME = 'posts'
+const ORDER_BY = 'ORDER BY id DESC'
 
 export default {
   async create(post: Omit<IPost, 'id'>): Promise<IPost> {
@@ -28,7 +29,7 @@ export default {
   },
   async getByUserId(userId: string): Promise<IPost[]> {
     const result = await pool.query(
-      `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE user_id = $1`,
+      `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE user_id = $1 ${ORDER_BY}`,
       [userId],
     )
     return result.rows || []
@@ -44,7 +45,9 @@ export default {
   }): Promise<IPost[]> {
     let result
     if (!body && !location && !title)
-      result = await pool.query(`SELECT ${COLUMNS} FROM ${TABLE_NAME}`)
+      result = await pool.query(
+        `SELECT ${COLUMNS} FROM ${TABLE_NAME} ${ORDER_BY}`,
+      )
     else {
       let whereClause = 'WHERE'
       let queryArgs = []
@@ -65,7 +68,7 @@ export default {
         queryArgs.push(`%${title}%`)
       }
       result = await pool.query(
-        `SELECT ${COLUMNS} FROM ${TABLE_NAME} ${whereClause}`,
+        `SELECT ${COLUMNS} FROM ${TABLE_NAME} ${whereClause} ${ORDER_BY}`,
         queryArgs,
       )
     }
