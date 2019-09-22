@@ -13,7 +13,6 @@ import gql from 'graphql-tag'
 import * as React from 'react'
 import { networkErrorMessage } from '../../constants'
 import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
-import { useAppState, IUser } from '../AppStateContainer'
 import { IPost } from '../../types'
 import { GET_POSTS_BY_USER_ID } from './MyPosts'
 
@@ -55,10 +54,9 @@ interface IMutationResult {
 }
 
 export default function CreatePost({ navigate }: RouteComponentProps) {
-  useRedirectUnAuthed()
+  const user = useRedirectUnAuthed()
   const [submitError, setSubmitError] = React.useState<React.ReactNode>()
-  const [{ user }] = useAppState()
-  const userId = (user as IUser).id
+  const userId = user.id
   const [createPost] = useMutation<IMutationResult, IMutationVariables>(
     CREATE_POST,
     {

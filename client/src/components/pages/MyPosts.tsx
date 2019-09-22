@@ -3,7 +3,6 @@ import { RouteComponentProps, Link, NavigateFn } from '@reach/router'
 import { Spinner, Paper, PaperGroup } from 'eri'
 import gql from 'graphql-tag'
 import * as React from 'react'
-import { useAppState, IUser } from '../AppStateContainer'
 import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
 import PostListItem from '../PostListItem'
 import { IPost } from '../../types'
@@ -24,12 +23,11 @@ export const GET_POSTS_BY_USER_ID = gql`
 `
 
 export default function MyPosts({ navigate }: RouteComponentProps) {
-  useRedirectUnAuthed()
-  const [{ user }] = useAppState()
+  const user = useRedirectUnAuthed()
   const { data, error, loading } = useQuery<IQueryResult>(
     GET_POSTS_BY_USER_ID,
     {
-      variables: { userId: (user as IUser).id },
+      variables: { userId: user.id },
     },
   )
 

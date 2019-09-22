@@ -17,7 +17,6 @@ import { GET_POST, IGetPostQueryResult } from '../queries'
 import { networkErrorMessage } from '../../constants'
 import { IPost } from '../../types'
 import { GET_POSTS_BY_USER_ID } from './MyPosts'
-import { useAppState, IUser } from '../AppStateContainer'
 
 export const UPDATE_POST = gql(`
 mutation UpdatePost($input: UpdatePostInput!) {
@@ -56,10 +55,9 @@ interface IProps extends RouteComponentProps {
 }
 
 export default function EditPost(props: RouteComponentProps) {
-  useRedirectUnAuthed()
+  const user = useRedirectUnAuthed()
   const { id } = props as IProps
-  const [{ user }] = useAppState()
-  const userId = (user as IUser).id
+  const userId = user.id
   const [submitError, setSubmitError] = React.useState<React.ReactNode>()
   const { data, error, loading } = useQuery<IGetPostQueryResult>(GET_POST, {
     variables: { id },
