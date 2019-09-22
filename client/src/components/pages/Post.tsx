@@ -1,26 +1,11 @@
 import { RouteComponentProps } from '@reach/router'
 import { Paper, Spinner, PaperGroup } from 'eri'
-import gql from 'graphql-tag'
 import * as React from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import { IPost } from '../../types'
 import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
-
-const GET_POST = gql(`query GetPost($id: ID!) {
-  getPost(id: $id) {
-    body
-    id
-    location
-    title
-  }
-}
-`)
+import { GET_POST, IGetPostQueryResult } from '../queries'
 
 export const keysToIgnore = ['body', 'id', 'title', '__typename']
-
-interface IQueryResult {
-  getPost: IPost
-}
 
 interface IProps extends RouteComponentProps {
   id: string
@@ -29,7 +14,7 @@ interface IProps extends RouteComponentProps {
 export default function Post(props: RouteComponentProps) {
   useRedirectUnAuthed()
   const { id } = props as IProps
-  const { data, error, loading } = useQuery<IQueryResult>(GET_POST, {
+  const { data, error, loading } = useQuery<IGetPostQueryResult>(GET_POST, {
     variables: { id },
   })
   return (
