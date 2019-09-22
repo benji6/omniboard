@@ -20,7 +20,7 @@ export default {
     )
     return result.rows && result.rows[0]
   },
-  async delete(id: number): Promise<IPost[]> {
+  async delete(id: number): Promise<IPost> {
     const result = await pool.query(
       `DELETE FROM ${TABLE_NAME} WHERE id = $1 RETURNING ${COLUMNS}`,
       [id],

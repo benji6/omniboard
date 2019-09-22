@@ -38,7 +38,7 @@ const resolvers = {
         id: number
       },
       context: IContext,
-    ): Promise<number> => {
+    ): Promise<IPost> => {
       if (!context.user) throw new AuthenticationError('Must sign in')
       const post = await postRepository.get(id)
       if (!post) throw new UserInputError('Post does not exist')
@@ -46,9 +46,7 @@ const resolvers = {
         throw new ForbiddenError(
           `Authenticated user id ${context.user.id} does not match post user id ${post.userId}`,
         )
-      const deletedPosts = await postRepository.delete(id)
-      if (!deletedPosts.length) throw Error(`Failed to delete post id ${id}`)
-      return deletedPosts[0].id
+      return postRepository.delete(id)
     },
     updatePost: async (
       _: unknown,

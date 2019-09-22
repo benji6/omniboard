@@ -12,11 +12,12 @@ import {
   Button,
 } from 'eri'
 import gql from 'graphql-tag'
-import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
-import { GET_POST, IGetPostQueryResult } from '../queries'
-import { networkErrorMessage } from '../../constants'
-import { IPost } from '../../types'
-import { GET_POSTS_BY_USER_ID } from './MyPosts'
+import useRedirectUnAuthed from '../../../hooks/useRedirectUnAuthed'
+import { GET_POST, IGetPostQueryResult } from '../../queries'
+import { networkErrorMessage } from '../../../constants'
+import { IPost } from '../../../types'
+import { GET_POSTS_BY_USER_ID } from '../MyPosts'
+import DeletePostDialog from './DeletePostDialog'
 
 export const UPDATE_POST = gql(`
 mutation UpdatePost($input: UpdatePostInput!) {
@@ -58,6 +59,7 @@ export default function EditPost(props: RouteComponentProps) {
   const user = useRedirectUnAuthed()
   const { id } = props as IProps
   const userId = user.id
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false)
   const [submitError, setSubmitError] = React.useState<React.ReactNode>()
   const { data, error, loading } = useQuery<IGetPostQueryResult>(GET_POST, {
     variables: { id },
@@ -186,11 +188,27 @@ export default function EditPost(props: RouteComponentProps) {
                 )}
                 <ButtonGroup>
                   <Button disabled={isSubmitting}>Save</Button>
+                  <Button
+                    danger
+                    disabled={isSubmitting}
+                    onClick={() => setIsDialogOpen(!isDialogOpen)}
+                    type="button"
+                    variant="secondary"
+                  >
+                    Delete
+                  </Button>
                 </ButtonGroup>
               </Form>
             )}
           </Formik>
         )}
+        <DeletePostDialog
+          id={Number(id)}
+          navigate={props.navigate as NavigateFn}
+          onClose={() => setIsDialogOpen(false)}
+          open={isDialogOpen}
+          userId={userId}
+        />
       </Paper>
     </PaperGroup>
   )
