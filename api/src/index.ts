@@ -35,7 +35,7 @@ const resolvers = {
       {
         id,
       }: {
-        id: number
+        id: string
       },
       context: IContext,
     ): Promise<IPost> => {
@@ -68,7 +68,7 @@ const resolvers = {
   Query: {
     getPost: async (
       _: undefined,
-      { id }: { id: number },
+      { id }: { id: string },
     ): Promise<IPost | undefined> => postRepository.get(id),
     getPostsByUserId: async (
       _: undefined,

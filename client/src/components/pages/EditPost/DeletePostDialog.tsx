@@ -15,11 +15,11 @@ mutation DeletePost($id: ID!) {
 `)
 
 interface IMutationResult {
-  deletePost: { __typename: 'Post'; id: number }
+  deletePost: { __typename: 'Post'; id: string }
 }
 
 interface IProps {
-  id: number
+  id: string
   navigate: NavigateFn
   onClose(): void
   open: boolean
@@ -33,7 +33,7 @@ export default function DeletePostDialog({
   open,
   userId,
 }: IProps) {
-  const [deletePost] = useMutation<IMutationResult, { id: number }>(
+  const [deletePost] = useMutation<IMutationResult, { id: string }>(
     DELETE_POST,
     {
       update(proxy, { data }) {
