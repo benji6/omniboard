@@ -1,14 +1,6 @@
 import pool from './pool'
 import { QueryResult } from 'pg'
 
-interface IPostRow {
-  body: string
-  id: number
-  location: string
-  title: string
-  userId: string
-}
-
 export interface IPost {
   body: string
   id: string
@@ -21,10 +13,10 @@ const COLUMNS = 'body, id, location, title, user_id AS "userId"'
 const TABLE_NAME = 'posts'
 const ORDER_BY = 'ORDER BY id DESC'
 
-const resultToPost = ({ rows: [row] }: QueryResult<IPostRow>): IPost =>
+const resultToPost = ({ rows: [row] }: QueryResult<IPost>): IPost =>
   row && { ...row, id: String(row.id) }
 
-const resultToPosts = ({ rows }: QueryResult<IPostRow>): IPost[] =>
+const resultToPosts = ({ rows }: QueryResult<IPost>): IPost[] =>
   rows.map(row => ({ ...row, id: String(row.id) }))
 
 export default {
@@ -36,21 +28,21 @@ export default {
     return resultToPost(result)
   },
   async delete(id: string): Promise<IPost> {
-    const result = await pool.query<IPostRow>(
+    const result = await pool.query<IPost>(
       `DELETE FROM ${TABLE_NAME} WHERE id = $1 RETURNING ${COLUMNS}`,
       [id],
     )
     return resultToPost(result)
   },
   async get(id: string): Promise<IPost | undefined> {
-    const result = await pool.query<IPostRow>(
+    const result = await pool.query<IPost>(
       `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE id = $1`,
       [id],
     )
     return resultToPost(result)
   },
   async getByUserId(userId: string): Promise<IPost[]> {
-    const result = await pool.query<IPostRow>(
+    const result = await pool.query<IPost>(
       `SELECT ${COLUMNS} FROM ${TABLE_NAME} WHERE user_id = $1 ${ORDER_BY}`,
       [userId],
     )
@@ -67,7 +59,7 @@ export default {
   }): Promise<IPost[]> {
     let result
     if (!body && !location && !title)
-      result = await pool.query<IPostRow>(
+      result = await pool.query<IPost>(
         `SELECT ${COLUMNS} FROM ${TABLE_NAME} ${ORDER_BY}`,
       )
     else {
@@ -89,7 +81,7 @@ export default {
         }title ILIKE $${queryArgs.length + 1}`
         queryArgs.push(`%${title}%`)
       }
-      result = await pool.query<IPostRow>(
+      result = await pool.query<IPost>(
         `SELECT ${COLUMNS} FROM ${TABLE_NAME} ${whereClause} ${ORDER_BY}`,
         queryArgs,
       )
@@ -97,7 +89,7 @@ export default {
     return resultToPosts(result)
   },
   async update(post: IPost): Promise<IPost> {
-    const result = await pool.query<IPostRow>(
+    const result = await pool.query<IPost>(
       `UPDATE ${TABLE_NAME} SET (body, location, title, user_id) = ($1, $2, $3, $4) WHERE id = $5 RETURNING ${COLUMNS}`,
       [post.body, post.location, post.title, post.userId, post.id],
     )
