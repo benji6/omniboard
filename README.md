@@ -4,6 +4,7 @@
 
 ## Getting started
 
+- Run the tests with `./test.sh`
 - Run the backend with `docker-compose up`
 - Run the frontend with `cd client && yarn && yarn start`
 
