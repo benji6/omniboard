@@ -24,6 +24,7 @@ export default gql`
 
   type Post {
     body: String!
+    createdAt: String!
     id: ID!
     location: String!
     title: String!

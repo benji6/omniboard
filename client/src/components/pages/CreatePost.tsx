@@ -98,6 +98,7 @@ export default function CreatePost({ navigate }: RouteComponentProps) {
                   createPost: {
                     __typename: 'Post',
                     body,
+                    createdAt: String(Date.now()),
                     id: String(
                       Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
                     ),

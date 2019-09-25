@@ -115,6 +115,7 @@ export default function EditPost(props: RouteComponentProps) {
                     updatePost: {
                       __typename: 'Post',
                       body,
+                      createdAt: String(Date.now()),
                       id: String(
                         Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
                       ),
@@ -203,7 +204,7 @@ export default function EditPost(props: RouteComponentProps) {
           </Formik>
         )}
         <DeletePostDialog
-          id={Number(id)}
+          id={id}
           navigate={props.navigate as NavigateFn}
           onClose={() => setIsDialogOpen(false)}
           open={isDialogOpen}

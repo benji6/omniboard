@@ -11,6 +11,7 @@ const SEARCH_POSTS = gql`
   query SearchPosts($input: SearchPostsInput!) {
     searchPosts(input: $input) {
       body
+      createdAt
       id
       location
       title

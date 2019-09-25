@@ -5,8 +5,6 @@ import { useQuery } from '@apollo/react-hooks'
 import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
 import { GET_POST, IGetPostQueryResult } from '../queries'
 
-export const keysToIgnore = ['body', 'id', 'title', '__typename']
-
 interface IProps extends RouteComponentProps {
   id: string
 }
@@ -27,20 +25,16 @@ export default function Post(props: RouteComponentProps) {
         ) : (
           <>
             <h2>{data.getPost.title}</h2>
+
             <h3>Post body</h3>
             <p e-util="pre-line">{data.getPost.body}</p>
             <h3>Key information</h3>
             <ul>
-              {Object.entries(data.getPost)
-                .filter(([key, val]) => {
-                  if (keysToIgnore.includes(key)) return false
-                  return val !== null
-                })
-                .map(([key, val]) => (
-                  <li key={key}>
-                    {key}: {String(val)}
-                  </li>
-                ))}
+              <li>Location: {data.getPost.location}</li>
+              <li>
+                Date posted:{' '}
+                {new Date(Number(data.getPost.createdAt)).toLocaleDateString()}
+              </li>
             </ul>
           </>
         )}
