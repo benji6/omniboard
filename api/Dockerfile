@@ -11,7 +11,7 @@ COPY tsconfig.json ./
 RUN yarn build
 
 FROM node:10-slim
-WORKDIR /usr/src/app
+WORKDIR /srv/omniboard
 COPY .env .env
 COPY --from=deps node_modules node_modules
 COPY --from=build build build

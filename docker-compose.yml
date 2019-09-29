@@ -9,7 +9,7 @@ services:
     ports:
       - 4000:4000
     volumes:
-      - ./api/src:/usr/src/app/src
+      - ./api/src:/srv/omniboard/src
   database:
     image: postgres:alpine
     environment:

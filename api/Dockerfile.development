@@ -1,5 +1,5 @@
 FROM node:10-alpine
-WORKDIR /usr/src/app
+WORKDIR /srv/omniboard
 COPY package.json yarn.lock ./
 RUN yarn
 COPY .env .env
