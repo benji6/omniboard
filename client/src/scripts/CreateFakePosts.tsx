@@ -13,12 +13,12 @@ const generatePost = (
   userId: string,
 ): {
   body: string
-  location: string
+  cityId: string
   title: string
   userId: string
 } => ({
   body: faker.lorem.paragraphs(),
-  location: faker.fake('{{address.city}}, {{address.county}}'),
+  cityId: String(integerBetween(0, 69)),
   title: faker.lorem.words(),
   userId,
 })
