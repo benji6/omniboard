@@ -3,30 +3,35 @@ import { gql } from 'apollo-server'
 export default gql`
   input CreatePostInput {
     body: String!
-    location: String!
+    cityId: ID!
     title: String!
     userId: String!
   }
 
   input SearchPostsInput {
     body: String
-    location: String
+    cityId: ID
     title: String
   }
 
   input UpdatePostInput {
     body: String!
     id: ID!
-    location: String!
+    cityId: ID!
     title: String!
     userId: String!
   }
 
+  type City {
+    id: ID!
+    name: String!
+  }
+
   type Post {
     body: String!
+    city: City!
     createdAt: String!
     id: ID!
-    location: String!
     title: String!
     userId: String!
   }
@@ -38,6 +43,7 @@ export default gql`
   }
 
   type Query {
+    cities: [City]!
     getPost(id: ID!): Post
     getPostsByUserId(userId: ID!): [Post]!
     searchPosts(input: SearchPostsInput!): [Post]!

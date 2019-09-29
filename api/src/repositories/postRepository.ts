@@ -3,30 +3,30 @@ import { QueryResult } from 'pg'
 
 export interface IPost {
   body: string
+  cityId: string
   createdAt: Date
   id: string
-  location: string
   title: string
   userId: string
 }
 
 const ALL_COLUMNS =
-  'body, created_at AS "createdAt", id, location, title, user_id AS "userId"'
-const SETTABLE_COLUMNS = 'body, location, title, user_id'
+  'body, city_id as "cityId", created_at AS "createdAt", id, title, user_id AS "userId"'
+const SETTABLE_COLUMNS = 'body, city_id, title, user_id'
 const TABLE_NAME = 'posts'
 const ORDER_BY = 'ORDER BY id DESC'
 
 const resultToPost = ({ rows: [row] }: QueryResult<IPost>): IPost =>
-  row && { ...row, id: String(row.id) }
+  row && { ...row, cityId: String(row.cityId), id: String(row.id) }
 
 const resultToPosts = ({ rows }: QueryResult<IPost>): IPost[] =>
-  rows.map(row => ({ ...row, id: String(row.id) }))
+  rows.map(row => ({ ...row, cityId: String(row.cityId), id: String(row.id) }))
 
 export default {
   async create(post: Omit<IPost, 'id'>): Promise<IPost> {
     const result = await pool.query<any>(
       `INSERT INTO ${TABLE_NAME} (${SETTABLE_COLUMNS}) VALUES ($1, $2, $3, $4) RETURNING ${ALL_COLUMNS}`,
-      [post.body, post.location, post.title, post.userId],
+      [post.body, post.cityId, post.title, post.userId],
     )
     return resultToPost(result)
   },
@@ -53,15 +53,15 @@ export default {
   },
   async search({
     body,
-    location,
+    cityId,
     title,
   }: {
     body?: string
-    location?: string
+    cityId?: string
     title?: string
   }): Promise<IPost[]> {
     let result
-    if (!body && !location && !title)
+    if (!body && !cityId && !title)
       result = await pool.query<IPost>(
         `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${ORDER_BY}`,
       )
@@ -72,11 +72,11 @@ export default {
         whereClause += ` body ILIKE $${queryArgs.length + 1}`
         queryArgs.push(`%${body}%`)
       }
-      if (location) {
+      if (cityId) {
         whereClause += ` ${
           queryArgs.length ? 'AND ' : ''
-        }location ILIKE $${queryArgs.length + 1}`
-        queryArgs.push(`%${location}%`)
+        }city_id = $${queryArgs.length + 1}`
+        queryArgs.push(`%${cityId}%`)
       }
       if (title) {
         whereClause += ` ${
@@ -94,7 +94,7 @@ export default {
   async update(post: IPost): Promise<IPost> {
     const result = await pool.query<IPost>(
       `UPDATE ${TABLE_NAME} SET (${SETTABLE_COLUMNS}) = ($1, $2, $3, $4) WHERE id = $5 RETURNING ${ALL_COLUMNS}`,
-      [post.body, post.location, post.title, post.userId, post.id],
+      [post.body, post.cityId, post.title, post.userId, post.id],
     )
     return resultToPost(result)
   },
