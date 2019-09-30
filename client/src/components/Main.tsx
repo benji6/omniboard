@@ -4,6 +4,6 @@ import Router from './Router'
 import { useAppState } from './AppStateContainer'
 
 export default function Main() {
-  const [{ userLoading }] = useAppState()
-  return <main>{userLoading ? <Spinner /> : <Router />}</main>
+  const [{ cities, userLoading }] = useAppState()
+  return <main>{userLoading || !cities ? <Spinner /> : <Router />}</main>
 }

@@ -1,5 +1,12 @@
 import * as React from 'react'
 import useLoadInitialUserInfo from './useLoadInitialUserInfo'
+import useLoadCities from './useLoadCities'
+import { ICity } from '../../types'
+
+interface ISetCities {
+  payload: ICity[]
+  type: 'setCities'
+}
 
 interface ISetUserLoading {
   payload: false
@@ -11,7 +18,7 @@ interface ISetUser {
   type: 'setUser'
 }
 
-export type IAction = ISetUserLoading | ISetUser
+export type IAction = ISetCities | ISetUserLoading | ISetUser
 
 export interface IUser {
   email: string
@@ -19,16 +26,19 @@ export interface IUser {
 }
 
 interface IState {
+  cities?: ICity[]
   userLoading: boolean
   user?: IUser
 }
 
 const appStateReducer = (state: IState, action: IAction) => {
   switch (action.type) {
-    case 'setUserLoading':
-      return { ...state, userLoading: action.payload }
+    case 'setCities':
+      return { ...state, cities: action.payload }
     case 'setUser':
       return { ...state, user: action.payload }
+    case 'setUserLoading':
+      return { ...state, userLoading: action.payload }
   }
 }
 
@@ -45,5 +55,6 @@ export default function AppStateContainer(props: {
 }) {
   const [state, dispatch] = React.useReducer(appStateReducer, initialState)
   useLoadInitialUserInfo(dispatch)
+  useLoadCities(dispatch)
   return <AppStateContext.Provider {...props} value={[state, dispatch]} />
 }

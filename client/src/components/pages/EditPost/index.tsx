@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { RouteComponentProps, NavigateFn } from '@reach/router'
+import { RouteComponentProps, NavigateFn, Redirect } from '@reach/router'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import * as React from 'react'
 import {
@@ -10,14 +10,15 @@ import {
   TextField,
   ButtonGroup,
   Button,
+  Select,
 } from 'eri'
 import gql from 'graphql-tag'
-import useRedirectUnAuthed from '../../../hooks/useRedirectUnAuthed'
 import { GET_POST, IGetPostQueryResult } from '../../queries'
 import { networkErrorMessage } from '../../../constants'
-import { IPost } from '../../../types'
+import { IPost, ICity } from '../../../types'
 import { GET_POSTS_BY_USER_ID } from '../MyPosts'
 import DeletePostDialog from './DeletePostDialog'
+import { useAppState } from '../../AppStateContainer'
 
 export const UPDATE_POST = gql(`
 mutation UpdatePost($input: UpdatePostInput!) {
@@ -27,6 +28,7 @@ mutation UpdatePost($input: UpdatePostInput!) {
       id
       name
     }
+    createdAt
     id
     title
     userId
@@ -59,7 +61,8 @@ interface IProps extends RouteComponentProps {
 }
 
 export default function EditPost(props: RouteComponentProps) {
-  const user = useRedirectUnAuthed()
+  const [{ cities, user }] = useAppState()
+  if (!user || !cities) return <Redirect to="/" />
   const { id } = props as IProps
   const userId = user.id
   const [isDialogOpen, setIsDialogOpen] = React.useState(false)
@@ -118,15 +121,11 @@ export default function EditPost(props: RouteComponentProps) {
                     updatePost: {
                       __typename: 'Post',
                       body,
+                      city: cities.find(({ id }) => id === cityId) as ICity,
                       createdAt: String(Date.now()),
                       id: String(
                         Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
                       ),
-                      city: {
-                        __typename: 'City',
-                        id: cityId,
-                        name: 'TODO', // TODO
-                      },
                       title,
                       userId,
                     },
@@ -165,15 +164,26 @@ export default function EditPost(props: RouteComponentProps) {
                 </Field>
                 <Field name="cityId" validate={requiredValidator}>
                   {({ field, form }: FieldProps<IFormValues>) => (
-                    <TextField
+                    <Select
                       {...field}
                       error={
                         form.submitCount &&
                         form.touched.cityId &&
                         form.errors.cityId
                       }
-                      label="City id"
-                    />
+                      label="City"
+                    >
+                      {[
+                        <option key="" hidden value="">
+                          Select
+                        </option>,
+                        ...cities.map(({ id, name }) => (
+                          <option key={id} value={id}>
+                            {name}
+                          </option>
+                        )),
+                      ]}
+                    </Select>
                   )}
                 </Field>
                 <Field name="body" validate={requiredValidator}>
