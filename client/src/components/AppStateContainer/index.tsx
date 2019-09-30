@@ -1,10 +1,17 @@
 import * as React from 'react'
 import useLoadInitialUserInfo from './useLoadInitialUserInfo'
 
-interface IAction {
-  payload?: any
-  type: 'setLoading' | 'setUser'
+interface ISetLoading {
+  payload: false
+  type: 'setLoading'
 }
+
+interface ISetUser {
+  payload?: IUser
+  type: 'setUser'
+}
+
+export type IAction = ISetLoading | ISetUser
 
 export interface IUser {
   email: string
@@ -16,18 +23,16 @@ interface IState {
   user?: IUser
 }
 
-export const appStateReducer = (state: IState, { payload, type }: IAction) => {
-  switch (type) {
+const appStateReducer = (state: IState, action: IAction) => {
+  switch (action.type) {
     case 'setLoading':
-      return { ...state, loading: payload }
+      return { ...state, loading: action.payload }
     case 'setUser':
-      return { ...state, user: payload }
-    default:
-      throw Error(`Unknown action type: ${type}`)
+      return { ...state, user: action.payload }
   }
 }
 
-const initialState = { loading: true }
+const initialState = { loading: true, user: undefined }
 
 const AppStateContext = React.createContext<
   [IState, React.Dispatch<React.ReducerAction<typeof appStateReducer>>]

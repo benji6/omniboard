@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { appStateReducer } from '.'
 import { getIdToken } from '../../cognito'
+import { IAction } from '.'
 
 export default function useLoadInitialUserInfo(
-  dispatch: React.Dispatch<React.ReducerAction<typeof appStateReducer>>,
+  dispatch: React.Dispatch<IAction>,
 ) {
   React.useEffect(() => {
     let aborted = false
