@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { appStateReducer } from './AppStateContainer'
-import { getIdToken } from '../cognito'
+import { appStateReducer } from '.'
+import { getIdToken } from '../../cognito'
 
 export default function useLoadInitialUserInfo(
   dispatch: React.Dispatch<React.ReducerAction<typeof appStateReducer>>,
