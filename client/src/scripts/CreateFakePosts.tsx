@@ -31,8 +31,8 @@ const generateFakePosts = (n: number, userId: string) => {
 
 export default function CreateFakePosts({ n }: { n: number }) {
   const [create] = useMutation(CREATE_POST)
-  const [{ loading, user }] = useAppState()
-  if (loading) return null
+  const [{ userLoading, user }] = useAppState()
+  if (userLoading) return null
   if (!user) throw Error('Must sign in')
   return (
     <Button

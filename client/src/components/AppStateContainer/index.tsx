@@ -1,9 +1,9 @@
 import * as React from 'react'
 import useLoadInitialUserInfo from './useLoadInitialUserInfo'
 
-interface ISetLoading {
+interface ISetUserLoading {
   payload: false
-  type: 'setLoading'
+  type: 'setUserLoading'
 }
 
 interface ISetUser {
@@ -11,7 +11,7 @@ interface ISetUser {
   type: 'setUser'
 }
 
-export type IAction = ISetLoading | ISetUser
+export type IAction = ISetUserLoading | ISetUser
 
 export interface IUser {
   email: string
@@ -19,20 +19,20 @@ export interface IUser {
 }
 
 interface IState {
-  loading: boolean
+  userLoading: boolean
   user?: IUser
 }
 
 const appStateReducer = (state: IState, action: IAction) => {
   switch (action.type) {
-    case 'setLoading':
-      return { ...state, loading: action.payload }
+    case 'setUserLoading':
+      return { ...state, userLoading: action.payload }
     case 'setUser':
       return { ...state, user: action.payload }
   }
 }
 
-const initialState = { loading: true, user: undefined }
+const initialState = { userLoading: true, user: undefined }
 
 const AppStateContext = React.createContext<
   [IState, React.Dispatch<React.ReducerAction<typeof appStateReducer>>]

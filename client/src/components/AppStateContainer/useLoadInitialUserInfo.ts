@@ -16,7 +16,7 @@ export default function useLoadInitialUserInfo(
         dispatch({ type: 'setUser', payload: { email, id: sub } })
       } catch {
       } finally {
-        dispatch({ type: 'setLoading', payload: false })
+        dispatch({ type: 'setUserLoading', payload: false })
       }
     })()
     return () => {
