@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/react-hooks'
-import { RouteComponentProps, Link, NavigateFn } from '@reach/router'
+import { RouteComponentProps, Link, NavigateFn, Redirect } from '@reach/router'
 import { Spinner, Paper, PaperGroup } from 'eri'
 import gql from 'graphql-tag'
 import * as React from 'react'
-import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
 import PostListItem from '../PostListItem'
 import { IPost } from '../../types'
+import { useAppState } from '../AppStateContainer'
 
 interface IQueryResult {
   getPostsByUserId: (Omit<IPost, 'userId'>)[]
@@ -27,7 +27,8 @@ export const GET_POSTS_BY_USER_ID = gql`
 `
 
 export default function MyPosts({ navigate }: RouteComponentProps) {
-  const user = useRedirectUnAuthed()
+  const [{ user }] = useAppState()
+  if (!user) return <Redirect to="/" />
   const { data, error, loading } = useQuery<IQueryResult>(
     GET_POSTS_BY_USER_ID,
     {

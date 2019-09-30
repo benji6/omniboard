@@ -1,16 +1,17 @@
-import { RouteComponentProps } from '@reach/router'
+import { RouteComponentProps, Redirect } from '@reach/router'
 import { Paper, Spinner, PaperGroup } from 'eri'
 import * as React from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import useRedirectUnAuthed from '../../hooks/useRedirectUnAuthed'
 import { GET_POST, IGetPostQueryResult } from '../queries'
+import { useAppState } from '../AppStateContainer'
 
 interface IProps extends RouteComponentProps {
   id: string
 }
 
 export default function Post(props: RouteComponentProps) {
-  useRedirectUnAuthed()
+  const [{ user }] = useAppState()
+  if (!user) return <Redirect to="/" />
   const { id } = props as IProps
   const { data, error, loading } = useQuery<IGetPostQueryResult>(GET_POST, {
     variables: { id },
