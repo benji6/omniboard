@@ -30,7 +30,7 @@ export default function Post(props: RouteComponentProps) {
             <p e-util="pre-line">{data.getPost.body}</p>
             <h3>Key information</h3>
             <ul>
-              <li>Location: {data.getPost.location}</li>
+              <li>City: {data.getPost.city.name}</li>
               <li>
                 Date posted:{' '}
                 {new Date(Number(data.getPost.createdAt)).toLocaleDateString()}

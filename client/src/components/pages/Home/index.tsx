@@ -5,15 +5,18 @@ import gql from 'graphql-tag'
 import * as React from 'react'
 import { useDebounce } from 'use-debounce'
 import PostListItem from '../../PostListItem'
-import { IPost } from '../../../types'
+import { IPost, ICity } from '../../../types'
 
 const SEARCH_POSTS = gql`
   query SearchPosts($input: SearchPostsInput!) {
     searchPosts(input: $input) {
       body
       createdAt
+      city {
+        id
+        name
+      }
       id
-      location
       title
     }
   }
@@ -21,43 +24,41 @@ const SEARCH_POSTS = gql`
 
 interface ISearchPostsInput {
   body?: string
-  location?: string
+  cityId?: string
   title?: string
 }
 
 interface IQueryResult {
-  searchPosts: IPost[]
+  searchPosts: (Omit<IPost, 'userId'>)[]
 }
 
 const DEBOUNCE_TIME = 300
 
 const initialSearchParams = new URLSearchParams(location.search) // eslint-disable-line no-restricted-globals
 const initialSearchBody = initialSearchParams.get('body') || ''
-const initialSearchLocation = initialSearchParams.get('location') || ''
+const initialSearchCityId = initialSearchParams.get('cityId') || ''
 const initialSearchTitle = initialSearchParams.get('title') || ''
 
-const initialFilterValues = [initialSearchBody, initialSearchLocation]
+const initialFilterValues = [initialSearchBody, initialSearchCityId]
 
 export default function Home({ navigate }: RouteComponentProps) {
   const [filtersApplied, setFiltersApplied] = React.useState(
     initialFilterValues.some(Boolean),
   )
   const [searchBody, setSearchBody] = React.useState(initialSearchBody)
-  const [searchLocation, setSearchLocation] = React.useState(
-    initialSearchLocation,
-  )
+  const [searchCityId, setSearchCityId] = React.useState(initialSearchCityId)
   const [searchTitle, setSearchTitle] = React.useState(initialSearchTitle)
 
   const [debouncedSearchBody] = useDebounce(searchBody, DEBOUNCE_TIME)
   const [debouncedSearchTitle] = useDebounce(searchTitle, DEBOUNCE_TIME)
-  const [debouncedSearchLocation] = useDebounce(searchLocation, DEBOUNCE_TIME)
+  const [debouncedSearchCityId] = useDebounce(searchCityId, DEBOUNCE_TIME)
 
   React.useEffect(() => {
     const searchParams = new URLSearchParams()
     if (filtersApplied) {
       if (debouncedSearchBody) searchParams.set('body', debouncedSearchBody)
-      if (debouncedSearchLocation)
-        searchParams.set('location', debouncedSearchLocation)
+      if (debouncedSearchCityId)
+        searchParams.set('cityId', debouncedSearchCityId)
     }
     if (debouncedSearchTitle) searchParams.set('title', debouncedSearchTitle)
     ;(navigate as NavigateFn)(
@@ -68,7 +69,7 @@ export default function Home({ navigate }: RouteComponentProps) {
     )
   } /* eslint-disable react-hooks/exhaustive-deps */, [
     debouncedSearchBody,
-    debouncedSearchLocation,
+    debouncedSearchCityId,
     debouncedSearchTitle,
     filtersApplied,
   ] /* eslint-enable react-hooks/exhaustive-deps */)
@@ -78,8 +79,7 @@ export default function Home({ navigate }: RouteComponentProps) {
   if (debouncedSearchTitle) searchPostsInput.title = debouncedSearchTitle
   if (filtersApplied) {
     if (debouncedSearchBody) searchPostsInput.body = debouncedSearchBody
-    if (debouncedSearchLocation)
-      searchPostsInput.location = debouncedSearchLocation
+    if (debouncedSearchCityId) searchPostsInput.cityId = debouncedSearchCityId
   }
 
   const { data, error, loading } = useQuery<IQueryResult>(SEARCH_POSTS, {
@@ -112,9 +112,9 @@ export default function Home({ navigate }: RouteComponentProps) {
               value={searchBody}
             />
             <TextField
-              label="Location"
-              onChange={e => setSearchLocation(e.target.value)}
-              value={searchLocation}
+              label="City id"
+              onChange={e => setSearchCityId(e.target.value)}
+              value={searchCityId}
             />
           </>
         )}
@@ -130,7 +130,7 @@ export default function Home({ navigate }: RouteComponentProps) {
           <p e-util="center">No results found</p>
         </Paper>
       ) : (
-        data.searchPosts.map((post: IPost) => (
+        data.searchPosts.map(post => (
           <PostListItem
             key={post.id}
             onClick={() => (navigate as NavigateFn)(`/posts/${post.id}`)}

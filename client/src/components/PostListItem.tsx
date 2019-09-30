@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Paper } from 'eri'
-import { IPost } from '../types'
+import { ICity, IPost } from '../types'
 
 interface IProps {
   onClick(): void
-  post: IPost
+  post: Omit<IPost, 'userId'>
 }
 
 export default function PostListItem({ post, ...rest }: IProps) {
@@ -12,7 +12,7 @@ export default function PostListItem({ post, ...rest }: IProps) {
     <Paper {...rest}>
       <h3>{post.title}</h3>
       <ul>
-        <li>Location: {post.location}</li>
+        <li>City: {post.city.name}</li>
         <li>
           Date posted: {new Date(Number(post.createdAt)).toLocaleDateString()}
         </li>

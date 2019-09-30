@@ -20,37 +20,40 @@ export const CREATE_POST = gql(`
 mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
     body
+    city {
+      id
+      name
+    }
     id
-    location
     title
     userId
   }
 }
 `)
 
-interface IFormValues {
-  body: string
-  location: string
-  title: string
-}
-
-const initialValues = {
-  body: '',
-  location: '',
-  title: '',
-}
-
 interface IMutationVariables {
   input: {
     body: string
-    location: string
+    cityId: string
     title: string
     userId: string
   }
 }
 
 interface IMutationResult {
-  createPost: IPost & { __typename: 'Post' }
+  createPost: IPost
+}
+
+interface IFormValues {
+  body: string
+  cityId: string
+  title: string
+}
+
+const initialValues = {
+  body: '',
+  cityId: '',
+  title: '',
 }
 
 export default function CreatePost({ navigate }: RouteComponentProps) {
@@ -91,7 +94,7 @@ export default function CreatePost({ navigate }: RouteComponentProps) {
         <h2>Create post</h2>
         <Formik
           initialValues={initialValues}
-          onSubmit={async ({ body, location, title }, { setSubmitting }) => {
+          onSubmit={async ({ body, cityId, title }, { setSubmitting }) => {
             try {
               createPost({
                 optimisticResponse: {
@@ -102,7 +105,11 @@ export default function CreatePost({ navigate }: RouteComponentProps) {
                     id: String(
                       Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
                     ),
-                    location,
+                    city: {
+                      __typename: 'City',
+                      id: cityId,
+                      name: 'TODO', //TODO
+                    },
                     title,
                     userId,
                   },
@@ -110,7 +117,7 @@ export default function CreatePost({ navigate }: RouteComponentProps) {
                 variables: {
                   input: {
                     body,
-                    location,
+                    cityId,
                     title,
                     userId,
                   },
@@ -138,16 +145,16 @@ export default function CreatePost({ navigate }: RouteComponentProps) {
                   />
                 )}
               </Field>
-              <Field name="location" validate={requiredValidator}>
+              <Field name="cityId" validate={requiredValidator}>
                 {({ field, form }: FieldProps<IFormValues>) => (
                   <TextField
                     {...field}
                     error={
                       form.submitCount &&
-                      form.touched.location &&
-                      form.errors.location
+                      form.touched.cityId &&
+                      form.errors.cityId
                     }
-                    label="Location"
+                    label="City id"
                   />
                 )}
               </Field>

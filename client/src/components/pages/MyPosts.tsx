@@ -8,15 +8,19 @@ import PostListItem from '../PostListItem'
 import { IPost } from '../../types'
 
 interface IQueryResult {
-  getPostsByUserId: IPost[]
+  getPostsByUserId: (Omit<IPost, 'userId'>)[]
 }
 
 export const GET_POSTS_BY_USER_ID = gql`
   query GetPostsByUserId($userId: ID!) {
     getPostsByUserId(userId: $userId) {
       body
+      city {
+        id
+        name
+      }
+      createdAt
       id
-      location
       title
     }
   }
@@ -44,7 +48,7 @@ export default function MyPosts({ navigate }: RouteComponentProps) {
       ) : error || !data ? (
         <p>Something went wrong, please try again</p>
       ) : (
-        data.getPostsByUserId.map((post: IPost) => (
+        data.getPostsByUserId.map(post => (
           <PostListItem
             key={post.id}
             onClick={() => (navigate as NavigateFn)(`/posts/${post.id}/edit`)}

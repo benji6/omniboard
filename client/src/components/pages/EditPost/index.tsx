@@ -23,8 +23,11 @@ export const UPDATE_POST = gql(`
 mutation UpdatePost($input: UpdatePostInput!) {
   updatePost(input: $input) {
     body
+    city {
+      id
+      name
+    }
     id
-    location
     title
     userId
   }
@@ -35,19 +38,19 @@ interface IMutationVariables {
   input: {
     body: string
     id: string
-    location: string
+    cityId: string
     title: string
     userId: string
   }
 }
 
 interface IMutationResult {
-  updatePost: IPost & { __typename: 'Post' }
+  updatePost: IPost
 }
 
 interface IFormValues {
   body: string
-  location: string
+  cityId: string
   title: string
 }
 
@@ -105,10 +108,10 @@ export default function EditPost(props: RouteComponentProps) {
           <Formik
             initialValues={{
               body: data.getPost.body,
-              location: data.getPost.location,
+              cityId: data.getPost.city.id,
               title: data.getPost.title,
             }}
-            onSubmit={async ({ body, location, title }, { setSubmitting }) => {
+            onSubmit={async ({ body, cityId, title }, { setSubmitting }) => {
               try {
                 updatePost({
                   optimisticResponse: {
@@ -119,7 +122,11 @@ export default function EditPost(props: RouteComponentProps) {
                       id: String(
                         Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
                       ),
-                      location,
+                      city: {
+                        __typename: 'City',
+                        id: cityId,
+                        name: 'TODO', // TODO
+                      },
                       title,
                       userId,
                     },
@@ -127,8 +134,8 @@ export default function EditPost(props: RouteComponentProps) {
                   variables: {
                     input: {
                       body,
+                      cityId,
                       id,
-                      location,
                       title,
                       userId,
                     },
@@ -156,16 +163,16 @@ export default function EditPost(props: RouteComponentProps) {
                     />
                   )}
                 </Field>
-                <Field name="location" validate={requiredValidator}>
+                <Field name="cityId" validate={requiredValidator}>
                   {({ field, form }: FieldProps<IFormValues>) => (
                     <TextField
                       {...field}
                       error={
                         form.submitCount &&
-                        form.touched.location &&
-                        form.errors.location
+                        form.touched.cityId &&
+                        form.errors.cityId
                       }
-                      label="Location"
+                      label="City id"
                     />
                   )}
                 </Field>
