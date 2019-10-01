@@ -76,7 +76,7 @@ export default {
         whereClause += ` ${
           queryArgs.length ? 'AND ' : ''
         }city_id = $${queryArgs.length + 1}`
-        queryArgs.push(`%${cityId}%`)
+        queryArgs.push(cityId)
       }
       if (title) {
         whereClause += ` ${

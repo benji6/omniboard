@@ -1,11 +1,12 @@
 import { useQuery } from '@apollo/react-hooks'
 import { NavigateFn, RouteComponentProps } from '@reach/router'
-import { Spinner, PaperGroup, Paper, Toggle, TextField } from 'eri'
+import { Spinner, PaperGroup, Paper, Toggle, TextField, Select } from 'eri'
 import gql from 'graphql-tag'
 import * as React from 'react'
 import { useDebounce } from 'use-debounce'
 import PostListItem from '../../PostListItem'
-import { IPost, ICity } from '../../../types'
+import { IPost } from '../../../types'
+import { useAppState } from '../../AppStateContainer'
 
 const SEARCH_POSTS = gql`
   query SearchPosts($input: SearchPostsInput!) {
@@ -42,6 +43,8 @@ const initialSearchTitle = initialSearchParams.get('title') || ''
 const initialFilterValues = [initialSearchBody, initialSearchCityId]
 
 export default function Home({ navigate }: RouteComponentProps) {
+  const [appState] = useAppState()
+  const cities = appState.cities!
   const [filtersApplied, setFiltersApplied] = React.useState(
     initialFilterValues.some(Boolean),
   )
@@ -111,11 +114,22 @@ export default function Home({ navigate }: RouteComponentProps) {
               onChange={e => setSearchBody(e.target.value)}
               value={searchBody}
             />
-            <TextField
-              label="City id"
+            <Select
+              label="City"
               onChange={e => setSearchCityId(e.target.value)}
               value={searchCityId}
-            />
+            >
+              {[
+                <option key="" value="">
+                  Select
+                </option>,
+                ...cities.map(({ id, name }) => (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                )),
+              ]}
+            </Select>
           </>
         )}
       </Paper>
