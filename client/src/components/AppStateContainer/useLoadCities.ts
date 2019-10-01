@@ -18,9 +18,15 @@ interface IQueryResult {
 }
 
 export default function useLoadCities(dispatch: React.Dispatch<IAction>) {
-  const { data, error } = useQuery<IQueryResult>(QUERY)
+  const { data, error, startPolling, stopPolling } = useQuery<IQueryResult>(
+    QUERY,
+  )
   React.useEffect(() => {
-    if (data) dispatch({ type: 'setCities', payload: data.cities })
-    else if (error) dispatch({ type: 'setCities', payload: [] })
-  }, [error, data, dispatch])
+    if (data) {
+      stopPolling()
+      dispatch({ type: 'setCities', payload: data.cities })
+    } else if (error) {
+      startPolling(5000)
+    }
+  }, [data, error, dispatch, startPolling, stopPolling])
 }
