@@ -6,6 +6,7 @@ export interface ICity {
 }
 
 const TABLE_NAME = 'cities'
+let cachedCities: ICity[]
 
 export default {
   async get(id: string): Promise<ICity> {
@@ -17,9 +18,10 @@ export default {
     return row && { ...row, id: String(row.id) }
   },
   async getAll(): Promise<ICity[]> {
+    if (cachedCities) return cachedCities
     const { rows } = await pool.query<ICity>(
       `SELECT * FROM ${TABLE_NAME} ORDER BY name`,
     )
-    return rows.map(row => ({ ...row, id: String(row.id) }))
+    return (cachedCities = rows.map(row => ({ ...row, id: String(row.id) })))
   },
 }
