@@ -10,8 +10,6 @@ interface IProps extends RouteComponentProps {
 }
 
 export default function Post(props: RouteComponentProps) {
-  const [{ user }] = useAppState()
-  if (!user) return <Redirect to="/" />
   const { id } = props as IProps
   const { data, error, loading } = useQuery<IGetPostQueryResult>(GET_POST, {
     variables: { id },
