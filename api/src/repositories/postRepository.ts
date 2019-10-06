@@ -55,18 +55,20 @@ export default {
     body,
     cityId,
     limit = 100,
+    offset = 0,
     title,
   }: {
     body?: string
     cityId?: string
     limit?: number
+    offset?: number
     title?: string
   }): Promise<IPost[]> {
     let result
     if (!body && !cityId && !title)
       result = await pool.query<IPost>(
-        `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${ORDER_BY} LIMIT $1`,
-        [limit],
+        `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${ORDER_BY} LIMIT $1 OFFSET $2`,
+        [limit, offset],
       )
     else {
       let whereClause = 'WHERE'
@@ -87,9 +89,10 @@ export default {
         }title ILIKE $${queryArgs.length + 1}`
         queryArgs.push(`%${title}%`)
       }
-      queryArgs.push(limit)
+      queryArgs.push(limit, offset)
       result = await pool.query<IPost>(
-        `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${whereClause} ${ORDER_BY} LIMIT $${queryArgs.length}`,
+        `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${whereClause} ${ORDER_BY} LIMIT $${queryArgs.length -
+          1} OFFSET $${queryArgs.length}`,
         queryArgs,
       )
     }
