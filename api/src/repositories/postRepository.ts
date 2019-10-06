@@ -54,16 +54,19 @@ export default {
   async search({
     body,
     cityId,
+    limit = 100,
     title,
   }: {
     body?: string
     cityId?: string
+    limit?: number
     title?: string
   }): Promise<IPost[]> {
     let result
     if (!body && !cityId && !title)
       result = await pool.query<IPost>(
-        `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${ORDER_BY}`,
+        `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${ORDER_BY} LIMIT $1`,
+        [limit],
       )
     else {
       let whereClause = 'WHERE'
@@ -84,8 +87,9 @@ export default {
         }title ILIKE $${queryArgs.length + 1}`
         queryArgs.push(`%${title}%`)
       }
+      queryArgs.push(limit)
       result = await pool.query<IPost>(
-        `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${whereClause} ${ORDER_BY}`,
+        `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${whereClause} ${ORDER_BY} LIMIT $${queryArgs.length}`,
         queryArgs,
       )
     }
