@@ -78,7 +78,17 @@ export default {
     ): Promise<IPost[]> => postRepository.getByUserId(userId),
     searchPosts: async (
       _: undefined,
-      { input }: { input: { body?: string; cityId?: string; title?: string } },
+      {
+        input,
+      }: {
+        input: {
+          body?: string
+          cityId?: string
+          limit?: number
+          offset?: number
+          title?: string
+        }
+      },
     ): Promise<IPost[]> => postRepository.search(input),
   },
 }

@@ -11,6 +11,8 @@ export default gql`
   input SearchPostsInput {
     body: String
     cityId: ID
+    limit: Int
+    offset: Int
     title: String
   }
 

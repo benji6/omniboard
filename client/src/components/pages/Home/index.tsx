@@ -87,7 +87,7 @@ export default function Home({ navigate }: RouteComponentProps) {
 
   const { data, error, loading } = useQuery<IQueryResult>(SEARCH_POSTS, {
     fetchPolicy: 'network-only',
-    variables: { input: searchPostsInput },
+    variables: { input: { ...searchPostsInput, limit: 10, offset: 0 } },
   })
 
   return (
