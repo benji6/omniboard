@@ -10,6 +10,8 @@ interface IContext {
   user?: { id: string }
 }
 
+const MAX_SEARCH_RESULTS = 100
+
 export default {
   Post: {
     city: (post: IPost) => cityRepository.get(post.cityId),
@@ -89,6 +91,12 @@ export default {
           title?: string
         }
       },
-    ): Promise<IPost[]> => postRepository.search(input),
+    ): Promise<IPost[]> => {
+      if (input.limit && input.limit > MAX_SEARCH_RESULTS)
+        throw new UserInputError(
+          `Maximum limit is ${MAX_SEARCH_RESULTS}, but received ${input.limit}`,
+        )
+      return postRepository.search(input)
+    },
   },
 }
