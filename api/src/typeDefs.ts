@@ -38,6 +38,11 @@ export default gql`
     userId: String!
   }
 
+  type SearchPostsResult {
+    posts: [Post]!
+    totalCount: Int!
+  }
+
   type Mutation {
     createPost(input: CreatePostInput!): Post!
     deletePost(id: ID!): Post!
@@ -48,6 +53,6 @@ export default gql`
     cities: [City]!
     getPost(id: ID!): Post
     getPostsByUserId(userId: ID!): [Post]!
-    searchPosts(input: SearchPostsInput!): [Post]!
+    searchPosts(input: SearchPostsInput!): SearchPostsResult!
   }
 `

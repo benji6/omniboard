@@ -10,6 +10,11 @@ export interface IPost {
   userId: string
 }
 
+export interface ISearchResult {
+  posts: IPost[]
+  totalCount: number
+}
+
 const ALL_COLUMNS =
   'body, city_id as "cityId", created_at AS "createdAt", id, title, user_id AS "userId"'
 const SETTABLE_COLUMNS = 'body, city_id, title, user_id'
@@ -21,6 +26,10 @@ const resultToPost = ({ rows: [row] }: QueryResult<IPost>): IPost =>
 
 const resultToPosts = ({ rows }: QueryResult<IPost>): IPost[] =>
   rows.map(row => ({ ...row, cityId: String(row.cityId), id: String(row.id) }))
+
+const totalCountResultToNumber = (
+  totalCountResult: QueryResult<{ count: string }>,
+): number => Number(totalCountResult.rows[0].count)
 
 export default {
   async create(post: Omit<IPost, 'id'>): Promise<IPost> {
@@ -63,14 +72,18 @@ export default {
     limit?: number
     offset?: number
     title?: string
-  }): Promise<IPost[]> {
-    let result
-    if (!body && !cityId && !title)
-      result = await pool.query<IPost>(
+  }): Promise<ISearchResult> {
+    let postsResult
+    let totalCountResult
+    if (!body && !cityId && !title) {
+      totalCountResult = await pool.query<{ count: string }>(
+        `SELECT COUNT(*) FROM ${TABLE_NAME}`,
+      )
+      postsResult = await pool.query<IPost>(
         `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${ORDER_BY} LIMIT $1 OFFSET $2`,
         [limit, offset],
       )
-    else {
+    } else {
       let whereClause = 'WHERE'
       let queryArgs = []
       if (body) {
@@ -89,14 +102,21 @@ export default {
         }title ILIKE $${queryArgs.length + 1}`
         queryArgs.push(`%${title}%`)
       }
+      totalCountResult = await pool.query<{ count: string }>(
+        `SELECT COUNT(*) FROM ${TABLE_NAME} ${whereClause}`,
+        queryArgs,
+      )
       queryArgs.push(limit, offset)
-      result = await pool.query<IPost>(
+      postsResult = await pool.query<IPost>(
         `SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} ${whereClause} ${ORDER_BY} LIMIT $${queryArgs.length -
           1} OFFSET $${queryArgs.length}`,
         queryArgs,
       )
     }
-    return resultToPosts(result)
+    return {
+      posts: resultToPosts(postsResult),
+      totalCount: totalCountResultToNumber(totalCountResult),
+    }
   },
   async update(post: IPost): Promise<IPost> {
     const result = await pool.query<IPost>(

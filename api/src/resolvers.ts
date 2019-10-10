@@ -3,7 +3,10 @@ import {
   ForbiddenError,
   UserInputError,
 } from 'apollo-server'
-import postRepository, { IPost } from './repositories/postRepository'
+import postRepository, {
+  IPost,
+  ISearchResult,
+} from './repositories/postRepository'
 import cityRepository from './repositories/cityRepository'
 
 interface IContext {
@@ -91,7 +94,7 @@ export default {
           title?: string
         }
       },
-    ): Promise<IPost[]> => {
+    ): Promise<ISearchResult> => {
       if (input.limit && input.limit > MAX_SEARCH_RESULTS)
         throw new UserInputError(
           `Maximum limit is ${MAX_SEARCH_RESULTS}, but received ${input.limit}`,
