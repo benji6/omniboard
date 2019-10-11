@@ -3,7 +3,6 @@ import { Paper, Spinner, PaperGroup } from 'eri'
 import * as React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { GET_POST, IGetPostQueryResult } from '../queries'
-import { useAppState } from '../AppStateContainer'
 
 interface IProps extends RouteComponentProps {
   id: string

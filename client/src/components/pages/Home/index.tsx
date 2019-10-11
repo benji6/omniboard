@@ -115,7 +115,7 @@ export default function Home({ navigate }: RouteComponentProps) {
   })
 
   return (
-    <PaperGroup>
+    <PaperGroup noSlide>
       <Paper>
         <h2>Search</h2>
         <TextField

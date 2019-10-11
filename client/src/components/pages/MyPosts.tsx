@@ -37,7 +37,7 @@ export default function MyPosts({ navigate }: RouteComponentProps) {
   )
 
   return (
-    <PaperGroup>
+    <PaperGroup noSlide>
       <Paper>
         <h2>My posts</h2>
         <Link to="/posts/create">Create a new post</Link>
