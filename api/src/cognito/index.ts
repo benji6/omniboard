@@ -32,12 +32,12 @@ interface IJwk {
   use: string
 }
 
-// TODO - cache this?
+let cachedJwks: IJwk[]
 const getJwks = async (): Promise<IJwk[]> => {
   const response = await fetch(`${ISSUER}/.well-known/jwks.json`)
   if (!response.ok) throw Error(`Bad status code: ${response.status}`)
   const { keys } = await response.json()
-  return keys
+  return (cachedJwks = keys)
 }
 
 export const validateToken = async (
@@ -51,7 +51,7 @@ export const validateToken = async (
   } = decodedJwt
   if (token_use !== 'id') throw Error(`Invalid token_use: ${token_use}`)
 
-  const jwks = await getJwks()
+  const jwks = cachedJwks || (await getJwks())
   const jwk = jwks.find(jwk => jwk.kid === header.kid)
   if (!jwk)
     throw Error(`Token key ID does not match any JSON Web Key: ${header.kid}`)

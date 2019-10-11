@@ -17,7 +17,7 @@ const client = new ApolloClient({
       })
     } catch {}
   },
-  uri: 'http://localhost:4000', // TODO
+  uri: 'http://localhost:4000',
 })
 
 export default function App() {
