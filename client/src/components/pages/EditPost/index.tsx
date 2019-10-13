@@ -11,6 +11,7 @@ import {
   ButtonGroup,
   Button,
   Select,
+  TextArea,
 } from 'eri'
 import gql from 'graphql-tag'
 import { GET_POST, IGetPostQueryResult } from '../../queries'
@@ -188,7 +189,7 @@ export default function EditPost(props: RouteComponentProps) {
                 </Field>
                 <Field name="body" validate={requiredValidator}>
                   {({ field, form }: FieldProps<IFormValues>) => (
-                    <TextField
+                    <TextArea
                       {...field}
                       error={
                         form.submitCount &&
@@ -196,6 +197,7 @@ export default function EditPost(props: RouteComponentProps) {
                         form.errors.body
                       }
                       label="Body"
+                      rows={10}
                     />
                   )}
                 </Field>

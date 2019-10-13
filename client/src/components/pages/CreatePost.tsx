@@ -8,6 +8,7 @@ import {
   Paper,
   requiredValidator,
   Select,
+  TextArea,
 } from 'eri'
 import { Formik, FormikProps, Form, Field, FieldProps } from 'formik'
 import gql from 'graphql-tag'
@@ -170,12 +171,13 @@ export default function CreatePost({ navigate }: RouteComponentProps) {
               </Field>
               <Field name="body" validate={requiredValidator}>
                 {({ field, form }: FieldProps<IFormValues>) => (
-                  <TextField
+                  <TextArea
                     {...field}
                     error={
                       form.submitCount && form.touched.body && form.errors.body
                     }
                     label="Body"
+                    rows={10}
                   />
                 )}
               </Field>
