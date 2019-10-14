@@ -1,6 +1,8 @@
 [build]
   command = "cd client && yarn build"
   publish = "client/dist"
+  [build.environment]
+    API_ORIGIN = "/api"
 [[headers]]
   for = "*"
   [headers.values]
@@ -9,6 +11,10 @@
   for = "src.*.(css|js)"
   [headers.values]
     Cache-Control = "public,max-age=31536000,immutable"
+[[redirects]]
+  from = "api/*"
+  status = 200
+  to = "http://EC2Co-EcsEl-UBFWPEJRK0TF-1258871249.us-east-1.elb.amazonaws.com/:splat"
 [[redirects]]
   from = "*"
   status = 200

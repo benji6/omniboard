@@ -7,6 +7,7 @@ import Main from './Main'
 import Menu from './Menu'
 import AppStateContainer from './AppStateContainer'
 import { getIdToken } from '../cognito'
+import { API_ORIGIN } from '../config'
 
 const client = new ApolloClient({
   request: async operation => {
@@ -17,7 +18,7 @@ const client = new ApolloClient({
       })
     } catch {}
   },
-  uri: 'http://localhost:4000',
+  uri: `${API_ORIGIN}/graphql`,
 })
 
 export default function App() {
