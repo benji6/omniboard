@@ -2,6 +2,8 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/330b50a1-8198-495f-91f2-b8d2cee0f916/deploy-status)](https://app.netlify.com/sites/omniboard/deploys)
 
+Unfinished and abandoned community board app - left here for posterity.
+
 ## Getting started
 
 - Run the tests with `./test.sh`
@@ -22,6 +24,10 @@ You can run the built image with `docker run -d -p 127.0.0.1:4000:4000 IMAGE`
 cd terraform
 terraform apply
 ```
+
+### Backend
+
+Right now only Cognito is in terraform, the rest of the backend must be deployed manually.
 
 ### UI
 
