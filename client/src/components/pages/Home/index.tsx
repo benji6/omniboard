@@ -163,16 +163,12 @@ export default function Home({ navigate }: RouteComponentProps) {
               }}
               value={searchCityId}
             >
-              {[
-                <option key="" value="">
-                  Select
-                </option>,
-                ...cities.map(({ id, name }) => (
-                  <option key={id} value={id}>
-                    {name}
-                  </option>
-                )),
-              ]}
+              <option value="">Select</option>
+              {cities.map(({ id, name }) => (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              ))}
             </Select>
           </>
         )}
