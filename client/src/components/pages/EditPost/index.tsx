@@ -174,9 +174,6 @@ export default function EditPost(props: RouteComponentProps) {
                       }
                       label="City"
                     >
-                      <option hidden value="">
-                        Select
-                      </option>
                       {cities.map(({ id, name }) => (
                         <option key={id} value={id}>
                           {name}
