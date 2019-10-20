@@ -14,7 +14,7 @@
 [[redirects]]
   from = "api/*"
   status = 200
-  to = "http://EC2Co-EcsEl-UBFWPEJRK0TF-1258871249.us-east-1.elb.amazonaws.com/:splat"
+  to = "http://ec2-100-26-29-192.compute-1.amazonaws.com:4000/:splat"
 [[redirects]]
   from = "*"
   status = 200
